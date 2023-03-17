@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.CognitiveServices.Client", "Azure.CognitiveServices.Client\Azure.CognitiveServices.Client\Azure.CognitiveServices.Client.csproj", "{6630B695-2C6C-4325-BDD9-8F53958B8804}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.CognitiveService.Client.Integration.Tests", "Tests\Azure.CognitiveService.Client.Integration.Tests\Azure.CognitiveService.Client.Integration.Tests.csproj", "{7AEBEA09-2202-47C4-AD19-3FD822B89097}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{037978BE-9B34-42F1-A38F-DC26056519D9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.CognitiveService.Client.ConsoleApp", "examples\Azure.CognitiveService.Client.ConsoleApp\Azure.CognitiveService.Client.ConsoleApp.csproj", "{81C36AD5-CC8F-44A9-92B5-E6E3E9DC2170}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.CognitiveService.Client.BlazorApp", "Azure.CognitiveService.Client.BlazorApp\Azure.CognitiveService.Client.BlazorApp.csproj", "{3D4A123A-8503-4677-A71B-13D5372D86B4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6630B695-2C6C-4325-BDD9-8F53958B8804}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6630B695-2C6C-4325-BDD9-8F53958B8804}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6630B695-2C6C-4325-BDD9-8F53958B8804}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6630B695-2C6C-4325-BDD9-8F53958B8804}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AEBEA09-2202-47C4-AD19-3FD822B89097}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AEBEA09-2202-47C4-AD19-3FD822B89097}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AEBEA09-2202-47C4-AD19-3FD822B89097}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AEBEA09-2202-47C4-AD19-3FD822B89097}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81C36AD5-CC8F-44A9-92B5-E6E3E9DC2170}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81C36AD5-CC8F-44A9-92B5-E6E3E9DC2170}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81C36AD5-CC8F-44A9-92B5-E6E3E9DC2170}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81C36AD5-CC8F-44A9-92B5-E6E3E9DC2170}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D4A123A-8503-4677-A71B-13D5372D86B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D4A123A-8503-4677-A71B-13D5372D86B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D4A123A-8503-4677-A71B-13D5372D86B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D4A123A-8503-4677-A71B-13D5372D86B4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{81C36AD5-CC8F-44A9-92B5-E6E3E9DC2170} = {037978BE-9B34-42F1-A38F-DC26056519D9}
+		{3D4A123A-8503-4677-A71B-13D5372D86B4} = {037978BE-9B34-42F1-A38F-DC26056519D9}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {282454C1-5193-4F43-80C0-C577099EE54D}
+	EndGlobalSection
+EndGlobal
