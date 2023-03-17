@@ -15,7 +15,6 @@ namespace Azure.CognitiveServices.Client.OpenAI.Services
 
         internal HttpRequestMessage CreateRequest(string uri, AzureOpenAIConfig config, object data)
         {
-            data.Validate();
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, uri);
 
             if (!string.IsNullOrWhiteSpace(config.ApiKey))

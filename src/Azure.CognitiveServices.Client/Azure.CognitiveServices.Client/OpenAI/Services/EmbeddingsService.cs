@@ -19,12 +19,14 @@ namespace Azure.CognitiveServices.Client.OpenAI.Services
         {
             return ErrorHandler(() =>
             {
-                var request = CreateRequest(
-                   $"{azureOpenAIConfig.ApiUrl}/openai/deployments/{azureOpenAIConfig.DeploymentName}/embeddings?api-version={azureOpenAIConfig.ApiVersion}",
-                   azureOpenAIConfig,
-                   model);
+                model.Validate();
 
-                return _httpService.SendRequest<EmbeddingsResponse, ErrorResponse>(request);
+                var request = CreateRequest(
+                    $"{azureOpenAIConfig.ApiUrl}/openai/deployments/{azureOpenAIConfig.DeploymentName}/embeddings?api-version={azureOpenAIConfig.ApiVersion}",
+                    azureOpenAIConfig,
+                    model);
+                
+                    return _httpService.SendRequest<EmbeddingsResponse, ErrorResponse>(request);
             });
         }
     }

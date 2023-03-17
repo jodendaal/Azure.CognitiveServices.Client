@@ -1,4 +1,5 @@
-﻿using Azure.CognitiveServices.Client.OpenAI.Models.Requests;
+﻿using Azure.CognitiveServices.Client;
+using Azure.CognitiveServices.Client.OpenAI.Models.Requests;
 using Azure.CognitiveServices.Client.OpenAI.Models.Responses;
 using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
 using Azure.CognitiveServices.Client.OpenAI.Services;
@@ -17,24 +18,30 @@ public class TextCompletionService : BaseOpenAIService,ITextCompletionService
     {
         return ErrorHandler(() =>
         {
+            completionRequest.Validate();
+
             var request = CreateRequest(
             $"{azureOpenAIConfig.ApiUrl}/openai/deployments/{azureOpenAIConfig.DeploymentName}/completions?api-version={azureOpenAIConfig.ApiVersion}",
                 azureOpenAIConfig,
                 completionRequest);
-
-            return _httpService.SendRequest<TextCompletionResponse, ErrorResponse>(request);
+            
+                return _httpService.SendRequest<TextCompletionResponse, ErrorResponse>(request);
         });
     }
 
     public IAsyncEnumerable<OpenAIHttpOperationResult<TextCompletionResponse, ErrorResponse>> GetStream(TextCompletionRequest completionRequest, AzureOpenAIConfig azureOpenAIConfig)
     {
         completionRequest.Stream = true;
-       
+
+        completionRequest.Validate();
+
         var request = CreateRequest(
-        $"{azureOpenAIConfig.ApiUrl}/openai/deployments/{azureOpenAIConfig.DeploymentName}/completions?api-version={azureOpenAIConfig.ApiVersion}",
+            $"{azureOpenAIConfig.ApiUrl}/openai/deployments/{azureOpenAIConfig.DeploymentName}/completions?api-version={azureOpenAIConfig.ApiVersion}",
             azureOpenAIConfig,
             completionRequest);
 
-        return _httpService.SendRequestStream<TextCompletionResponse, ErrorResponse>(request);
+
+            return _httpService.SendRequestStream<TextCompletionResponse, ErrorResponse>(request);
+
     }
 }
