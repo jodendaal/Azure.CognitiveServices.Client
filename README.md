@@ -1,2 +1,2 @@
 # Azure.CognitiveServices.Client
-Client librar for calling Azure Cognitive Services
+Client library for calling Azure Cognitive Services
