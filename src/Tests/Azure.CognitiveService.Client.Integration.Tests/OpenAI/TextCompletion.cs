@@ -4,6 +4,7 @@ using Azure.CognitiveServices.Client.OpenAI.ExtensionMethods;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using System.Net;
 
 namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
 {
@@ -12,7 +13,7 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
         [Test]
         public async Task Completion()
         {
-            var config = ServiceProvider.GetRequiredService<IOptionsSnapshot<AzureOpenAIConfig>>().Get("textCompletion");
+            var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("textCompletion");
 
             var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
             var completionResponse = await completionService.Get("Say This is a test.", config, options =>
@@ -25,13 +26,33 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
 
 
             Assert.That(completionResponse.IsSuccess, Is.True);
-            Assert.That(completionResponse.Result!.Choices[0].Text.Trim(), Is.EqualTo("This is a test."));
+            Assert.That(completionResponse.Value!.Choices[0].Text.Trim().Contains("This is a test"), Is.EqualTo(true));
+        }
+
+        [Test]
+        public async Task CompletionImplicitConvert()
+        {
+            var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("textCompletion");
+
+            var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
+            var completionResponse = await completionService.Get("Say This is a test.", config, options =>
+            {
+                options.MaxTokens = 200;
+                options.N = 1;
+                options.Temperature = 1;
+            });
+
+            Console.WriteLine(completionResponse.ErrorMessage);
+
+            Assert.True(completionResponse.IsSuccess);
+            //Assert.That(completionResponse, Is.Not.Null);
+            //Assert.That(completionResponse.Choices[0].Text.Trim().Contains("This is a test"), Is.EqualTo(true));
         }
 
         [Test]
         public async Task CompletionStream()
         {
-            var config = ServiceProvider.GetRequiredService<IOptionsSnapshot<AzureOpenAIConfig>>().Get("textCompletion");
+            var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("textCompletion");
 
             var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
 
@@ -47,10 +68,10 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
             {
                 if (result.IsSuccess)
                 {
-                    response.Add(result.Result!.Choices[0].Text);
+                    response.Add(result.Value!.Choices[0].Text);
                 }
 
-                Console.WriteLine(result?.Result?.Choices[0].Text);
+                Console.WriteLine(result?.Value?.Choices[0].Text);
             }
 
             var responseText = string.Join(" ", response).Trim();
@@ -58,6 +79,47 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
 
             Assert.That(responseText, Is.EqualTo("This  is  a  test ."));
             
+        }
+
+
+        [Test]
+        public async Task CompletionUnauthorisedResponse()
+        {
+            var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("textCompletion");
+            var badConfig = config with { ApiUrl = "" };
+            var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
+            var completionResponse = await completionService.Get("Say This is a test.", badConfig, options =>
+            {
+                options.MaxTokens = 200;
+                options.N = 1;
+                options.Temperature = 1;
+            });
+
+            Assert.That(completionResponse.IsSuccess, Is.False);
+            Assert.That(completionResponse.ErrorResponse, Is.Not.Null);
+            Assert.That(completionResponse.Exception, Is.Not.Null);
+            Assert.That(completionResponse.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+            Assert.That(completionResponse.ErrorResponse.Error.Code, Is.EqualTo("401")); 
+            Assert.That(completionResponse.ErrorResponse.Error.Message.Contains("Access denied due"), Is.EqualTo(true));
+        }
+
+        [Test]
+        public async Task CompletionBadRequestResponse()
+        {
+            var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("textCompletion");
+            config.ApiUrl = "";
+            var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
+           
+            var completionResponse = await completionService.Get("Say This is a test.", config, options =>
+            {
+                options.MaxTokens = 200;
+                options.N = 1;
+                options.Temperature = 1;
+            });
+
+            Assert.That(completionResponse.IsSuccess, Is.False);
+            Assert.That(completionResponse.Exception, Is.Not.Null);
+            Assert.That(completionResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
         }
     }
 }

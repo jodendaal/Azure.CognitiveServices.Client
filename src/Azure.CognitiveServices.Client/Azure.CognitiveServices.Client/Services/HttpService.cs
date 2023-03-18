@@ -24,7 +24,7 @@ namespace Azure.CognitiveServices.Client.Services
 
        
 
-        public async Task<OpenAIHttpOperationResult<T, TError>> PostForm<T, TError>(string? path, Object @object)
+        public async Task<OpenAIHttpResult<T, TError>> PostForm<T, TError>(string? path, Object @object)
         {
             return await ErrorHandler(async () =>
             {
@@ -36,7 +36,7 @@ namespace Azure.CognitiveServices.Client.Services
             });
         }
 
-        public async Task<OpenAIHttpOperationResult<T, TError>> Delete<T, TError>(string? path)
+        public async Task<OpenAIHttpResult<T, TError>> Delete<T, TError>(string? path)
         {
             return await ErrorHandler(async () =>
             {
@@ -45,7 +45,7 @@ namespace Azure.CognitiveServices.Client.Services
             });
         }
 
-        public async Task<OpenAIHttpOperationResult<T, TError>> Get<T, TError>(string? path)
+        public async Task<OpenAIHttpResult<T, TError>> Get<T, TError>(string? path)
         {
             return await ErrorHandler(async () =>
             {
@@ -54,7 +54,7 @@ namespace Azure.CognitiveServices.Client.Services
             });
         }
 
-        public async Task<OpenAIHttpOperationResult<FileContentInfo, TError>> GetFile<TError>(string? path)
+        public async Task<OpenAIHttpResult<FileContentInfo, TError>> GetFile<TError>(string? path)
         {
             return await ErrorHandler(async () =>
             {
@@ -64,21 +64,21 @@ namespace Azure.CognitiveServices.Client.Services
                     var bytes = await response.Content.ReadAsByteArrayAsync();
                     var fileName = response.Content?.Headers?.ContentDisposition?.FileName?.Replace(@"""", "");
                     var fileContents = new FileContentInfo(bytes, fileName ?? "file");
-                    return new OpenAIHttpOperationResult<FileContentInfo, TError>(fileContents, response.StatusCode);
+                    return new OpenAIHttpResult<FileContentInfo, TError>(fileContents, response.StatusCode);
                 }
 
                 var errorResponse = await response.Content.ReadAsStringAsync();
-                return new OpenAIHttpOperationResult<FileContentInfo, TError>(new Exception(response.StatusCode.ToString(), new Exception(errorResponse)), response.StatusCode, errorResponse);
+                return new OpenAIHttpResult<FileContentInfo, TError>(new Exception(response.StatusCode.ToString(), new Exception(errorResponse)), response.StatusCode, errorResponse);
             });
         }
 
-        public async Task<OpenAIHttpOperationResult<T, TError>> SendRequest<T, TError>(HttpRequestMessage request)
+        public async Task<OpenAIHttpResult<T, TError>> SendRequest<T, TError>(HttpRequestMessage request)
         {
             var response = await _httpClient.SendAsync(request);
             return await HandleResponse<T, TError>(response);
         }
 
-        public async IAsyncEnumerable<OpenAIHttpOperationResult<T, TError>> SendRequestStream<T, TError>(HttpRequestMessage request)
+        public async IAsyncEnumerable<OpenAIHttpResult<T, TError>> SendRequestStream<T, TError>(HttpRequestMessage request)
         {
             var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
 
@@ -95,13 +95,13 @@ namespace Azure.CognitiveServices.Client.Services
                     if (!string.IsNullOrWhiteSpace(line) && line != "[DONE]")
                     {
                         var t = JsonSerializer.Deserialize<T>(line.Trim(), _jsonSerializerOptions);
-                        yield return new OpenAIHttpOperationResult<T, TError>(t, response.StatusCode);
+                        yield return new OpenAIHttpResult<T, TError>(t, response.StatusCode);
                     }
                 }
             }
         }
 
-        public async Task<OpenAIHttpOperationResult<T, TError>> Post<T, TError>(string? path, Object @object)
+        public async Task<OpenAIHttpResult<T, TError>> Post<T, TError>(string? path, Object @object)
         {
             return await ErrorHandler(async () =>
             {
@@ -111,7 +111,7 @@ namespace Azure.CognitiveServices.Client.Services
             });
         }
 
-        public async IAsyncEnumerable<OpenAIHttpOperationResult<T, TError>> PostStream<T, TError>(string? path, Object @object)
+        public async IAsyncEnumerable<OpenAIHttpResult<T, TError>> PostStream<T, TError>(string? path, Object @object)
         {
             @object.Validate();
 
@@ -134,26 +134,26 @@ namespace Azure.CognitiveServices.Client.Services
                         if (!string.IsNullOrWhiteSpace(line) && line != "[DONE]")
                         {
                             var t = JsonSerializer.Deserialize<T>(line.Trim(), _jsonSerializerOptions);
-                            yield return new OpenAIHttpOperationResult<T, TError>(t, response.StatusCode);
+                            yield return new OpenAIHttpResult<T, TError>(t, response.StatusCode);
                         }
                     }
                 }
             }
         }
 
-        public async Task<OpenAIHttpOperationResult<T, TError>> HandleResponse<T, TError>(HttpResponseMessage response)
+        public async Task<OpenAIHttpResult<T, TError>> HandleResponse<T, TError>(HttpResponseMessage response)
         {
             if (response.IsSuccessStatusCode)
             {
                 var responseObject = await response.Content.ReadFromJsonAsync<T>();
-                return new OpenAIHttpOperationResult<T, TError>(responseObject, response.StatusCode);
+                return new OpenAIHttpResult<T, TError>(responseObject, response.StatusCode);
             }
 
             var errorResponse = await response.Content.ReadAsStringAsync();
-            return new OpenAIHttpOperationResult<T, TError>(new Exception(response.StatusCode.ToString(), new Exception(errorResponse)), response.StatusCode, errorResponse);
+            return new OpenAIHttpResult<T, TError>(new Exception(response.StatusCode.ToString(), new Exception(errorResponse)), response.StatusCode, errorResponse);
         }
 
-        private async Task<OpenAIHttpOperationResult<T, TError>> ErrorHandler<T, TError>(Func<Task<OpenAIHttpOperationResult<T, TError>>> func)
+        private async Task<OpenAIHttpResult<T, TError>> ErrorHandler<T, TError>(Func<Task<OpenAIHttpResult<T, TError>>> func)
         {
             try
             {
@@ -161,7 +161,7 @@ namespace Azure.CognitiveServices.Client.Services
             }
             catch (Exception ex)
             {
-                return new OpenAIHttpOperationResult<T, TError>(ex, System.Net.HttpStatusCode.BadRequest);
+                return new OpenAIHttpResult<T, TError>(ex, System.Net.HttpStatusCode.BadRequest);
             }
         }
     }

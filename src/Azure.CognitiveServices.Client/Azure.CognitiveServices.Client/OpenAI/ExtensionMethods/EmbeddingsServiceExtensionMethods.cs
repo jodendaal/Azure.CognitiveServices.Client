@@ -7,13 +7,13 @@ namespace Azure.CognitiveServices.Client.OpenAI.ExtensionMethods
 {
     public static class EmbeddingsServiceExtensionMethods
     {
-        public static Task<OpenAIHttpOperationResult<EmbeddingsResponse, ErrorResponse>> Create(this IEmbeddingsService service, string input, AzureOpenAIConfig config)
+        public static Task<OpenAIHttpResult<EmbeddingsResponse, ErrorResponse>> Create(this IEmbeddingsService service, string input, AzureOpenAIConfig config)
         {
             var request = new EmbeddingsRequest(input.ToList());
             return service.Create(request, config);
         }
 
-        public static Task<OpenAIHttpOperationResult<EmbeddingsResponse, ErrorResponse>> Create(this IEmbeddingsService service, IList<string> input, AzureOpenAIConfig config)
+        public static Task<OpenAIHttpResult<EmbeddingsResponse, ErrorResponse>> Create(this IEmbeddingsService service, IList<string> input, AzureOpenAIConfig config)
         {
             var request = new EmbeddingsRequest(input);
             return service.Create(request, config);

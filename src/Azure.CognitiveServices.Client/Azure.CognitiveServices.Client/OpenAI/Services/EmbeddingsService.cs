@@ -15,7 +15,7 @@ namespace Azure.CognitiveServices.Client.OpenAI.Services
             _httpService = httpService;
         }
 
-        public Task<OpenAIHttpOperationResult<EmbeddingsResponse, ErrorResponse>> Create(EmbeddingsRequest model, AzureOpenAIConfig azureOpenAIConfig)
+        public Task<OpenAIHttpResult<EmbeddingsResponse, ErrorResponse>> Create(EmbeddingsRequest model, AzureOpenAIConfig azureOpenAIConfig)
         {
             return ErrorHandler(() =>
             {

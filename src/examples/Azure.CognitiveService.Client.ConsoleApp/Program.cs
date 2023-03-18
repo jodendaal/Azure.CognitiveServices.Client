@@ -69,7 +69,7 @@ namespace Azure.CognitiveService.Client.ConsoleApp
                 options.TopP = 1;
             });
 
-            Console.WriteLine(textCompletionResponse.Result!.Choices[0].Text);
+            Console.WriteLine(textCompletionResponse.Value!.Choices[0].Text);
 
 
             //Call Text Completion API Stream
@@ -79,13 +79,13 @@ namespace Azure.CognitiveService.Client.ConsoleApp
                 options.TopP = 1;
             }))
             {
-                Console.WriteLine(response.Result!.Choices[0].Text);
+                Console.WriteLine(response.Value!.Choices[0].Text);
             }
 
             //Call TextEmbeddings API
             var textEmbeddingsService = host.Services.GetRequiredService<IEmbeddingsService>()!;
             var textEmbeddingsResponse = await textEmbeddingsService.Create("Say This is a test.", textEmbeddingsConfig);
-            Console.WriteLine(textEmbeddingsResponse.Result!.Data);
+            Console.WriteLine(textEmbeddingsResponse.Value!.Data);
         }
     }
 }

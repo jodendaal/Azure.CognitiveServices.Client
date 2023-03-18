@@ -6,6 +6,6 @@ namespace Azure.CognitiveServices.Client.OpenAI.Services.Interfaces
 {
     public interface IEmbeddingsService
     {
-        Task<OpenAIHttpOperationResult<EmbeddingsResponse, ErrorResponse>> Create(EmbeddingsRequest model, AzureOpenAIConfig azureOpenAIConfig);
+        Task<OpenAIHttpResult<EmbeddingsResponse, ErrorResponse>> Create(EmbeddingsRequest model, AzureOpenAIConfig azureOpenAIConfig);
     }
 }

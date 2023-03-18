@@ -7,10 +7,12 @@ public interface ITextCompletionService
     /// <summary>
     /// <inheritdoc cref="ITextCompletionService"/>
     /// </summary>
-    Task<OpenAIHttpOperationResult<TextCompletionResponse, ErrorResponse>> Get(TextCompletionRequest request, AzureOpenAIConfig azureOpenAIConfig);
+    Task<OpenAIHttpResult<TextCompletionResponse, ErrorResponse>> Get(TextCompletionRequest request, AzureOpenAIConfig azureOpenAIConfig);
+
+   // Task<Result<TextCompletionResponse>> GetTest(TextCompletionRequest request, AzureOpenAIConfig azureOpenAIConfig);
 
     /// <summary>
     /// <inheritdoc cref="ITextCompletionService"/>
     /// </summary>
-    IAsyncEnumerable<OpenAIHttpOperationResult<TextCompletionResponse, ErrorResponse>> GetStream(TextCompletionRequest request, AzureOpenAIConfig azureOpenAIConfig);
+    IAsyncEnumerable<OpenAIHttpResult<TextCompletionResponse, ErrorResponse>> GetStream(TextCompletionRequest request, AzureOpenAIConfig azureOpenAIConfig);
 }

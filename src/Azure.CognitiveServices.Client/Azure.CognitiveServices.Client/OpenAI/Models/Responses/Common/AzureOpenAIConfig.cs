@@ -1,6 +1,6 @@
 ﻿namespace Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common
 {
-    public class AzureOpenAIConfig
+    public record AzureOpenAIConfig
     {
         public AzureOpenAIConfig() { }
         public AzureOpenAIConfig(string deploymentName, string apiVersion, string apiUrl)

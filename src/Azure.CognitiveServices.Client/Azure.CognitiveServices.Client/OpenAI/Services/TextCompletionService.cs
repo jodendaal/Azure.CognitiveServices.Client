@@ -14,7 +14,7 @@ public class TextCompletionService : BaseOpenAIService,ITextCompletionService
         _httpService = httpService;
     }
 
-    public Task<OpenAIHttpOperationResult<TextCompletionResponse, ErrorResponse>> Get(TextCompletionRequest completionRequest, AzureOpenAIConfig azureOpenAIConfig)
+    public Task<OpenAIHttpResult<TextCompletionResponse, ErrorResponse>> Get(TextCompletionRequest completionRequest, AzureOpenAIConfig azureOpenAIConfig)
     {
         return ErrorHandler(() =>
         {
@@ -29,7 +29,7 @@ public class TextCompletionService : BaseOpenAIService,ITextCompletionService
         });
     }
 
-    public IAsyncEnumerable<OpenAIHttpOperationResult<TextCompletionResponse, ErrorResponse>> GetStream(TextCompletionRequest completionRequest, AzureOpenAIConfig azureOpenAIConfig)
+    public IAsyncEnumerable<OpenAIHttpResult<TextCompletionResponse, ErrorResponse>> GetStream(TextCompletionRequest completionRequest, AzureOpenAIConfig azureOpenAIConfig)
     {
         completionRequest.Stream = true;
 
@@ -44,4 +44,16 @@ public class TextCompletionService : BaseOpenAIService,ITextCompletionService
             return _httpService.SendRequestStream<TextCompletionResponse, ErrorResponse>(request);
 
     }
+
+    //public async Task<Result<TextCompletionResponse>> GetTest(TextCompletionRequest completionRequest, AzureOpenAIConfig azureOpenAIConfig)
+    //{
+    //    completionRequest.Validate();
+
+    //    var request = CreateRequest(
+    //    $"{azureOpenAIConfig.ApiUrl}/openai/deployments/{azureOpenAIConfig.DeploymentName}/completions?api-version={azureOpenAIConfig.ApiVersion}",
+    //        azureOpenAIConfig,
+    //        completionRequest);
+
+    //    return _httpService.SendRequest<TextCompletionResponse, ErrorResponse>(request);
+    //}
 }

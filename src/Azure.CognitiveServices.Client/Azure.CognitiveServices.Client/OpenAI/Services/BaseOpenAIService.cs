@@ -30,7 +30,7 @@ namespace Azure.CognitiveServices.Client.OpenAI.Services
             return message;
         }
 
-        internal async Task<OpenAIHttpOperationResult<T, TError>> ErrorHandler<T, TError>(Func<Task<OpenAIHttpOperationResult<T, TError>>> func)
+        internal async Task<OpenAIHttpResult<T, TError>> ErrorHandler<T, TError>(Func<Task<OpenAIHttpResult<T, TError>>> func)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace Azure.CognitiveServices.Client.OpenAI.Services
             }
             catch (Exception ex)
             {
-                return new OpenAIHttpOperationResult<T, TError>(ex, System.Net.HttpStatusCode.BadRequest);
+                return new OpenAIHttpResult<T, TError>(ex, System.Net.HttpStatusCode.BadRequest);
             }
         }
     }
