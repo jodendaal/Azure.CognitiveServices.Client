@@ -2,47 +2,80 @@
 
 <PageTitle>Text Completion Example</PageTitle>
 
-@using Azure.CognitiveService.Client.BlazorApp.Data
-@inject WeatherForecastService ForecastService
+@using Azure.CognitiveService.Client
+@using Azure.CognitiveService.Client.BlazorApp.Data;
+@using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
+@using Azure.CognitiveServices.Client.OpenAI.ExtensionMethods;
+@using Microsoft.Extensions.Options;
+@inject ITextCompletionService TextCompletionSerice
+@inject IOptionsSnapshot<AzureOpenAIConfig> OpenAIConfig;
 
-<h1>Weather forecast</h1>
+<h1>Text Completion Streaming Example</h1>
 
-<p>This component demonstrates fetching data from a service.</p>
+<p>This component demonstrates returning data from the TextCompletion endpoint.</p>
 
-@if (forecasts == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+<EditForm Model="@searchModel" OnValidSubmit="@GetCompletion">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Prompt</label>
+        <InputText id="name" @bind-Value="searchModel.SearchText" class="form-control" />
+        <div id="emailHelp" class="form-text">Text to send to OpenAI Text Completion endpoint</div>
+    </div>
+
+    <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">No. of results</label>
+        <InputNumber id="noOfResults" @bind-Value="searchModel.NoOfResults" class="form-control" />
+        <div id="emailHelp" class="form-text">How many results to return</div>
+    </div>
+
+    <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Max Tokens</label>
+        <InputNumber id="maxTokens" @bind-Value="searchModel.MaxTokens" class="form-control" />
+        <div id="emailHelp" class="form-text">Max tokens to consume, relates to how long the completion will be, N.B this includes your prompt</div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Search</button>
+</EditForm>
+
+
+<ul class="ul-response">
+    @foreach (var result in results)
+    {
+        <li>
+            <pre class="pre-response">
+                @result
+            </pre>
+           </li>
+    }
+  
+</ul>
+
 
 @code {
-    private WeatherForecast[]? forecasts;
+    private AzureOpenAIConfig config => OpenAIConfig.Get("textCompletion");
+    private string[] results = new string[0];
+    private SearchModel searchModel = new()
+        {
+            MaxTokens = 500,
+            NoOfResults = 1,
+            SearchText = "List 5 reasons how AI going to change the world?"
+        };
 
-    protected override async Task OnInitializedAsync()
+    private async Task GetCompletion()
     {
-        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        results = new string[searchModel.NoOfResults];
+
+        await foreach (var result in TextCompletionSerice.GetStream(searchModel.SearchText, config, o =>
+        {
+            o.N = searchModel.NoOfResults;
+            o.MaxTokens = searchModel.MaxTokens;
+        }))
+        {
+            var index = result.Value.Choices[0].Index;
+            results[index] += result.Value.Choices[0].Text;
+            StateHasChanged();
+        }
     }
 }
