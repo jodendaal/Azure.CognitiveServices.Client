@@ -7,6 +7,16 @@ public class TextCompletionResponse
     public int Created { get; set; }
     public string Model { get; set; }
     public Choice[] Choices { get; set; }
+
+    public override string ToString()
+    {
+        if(Choices.Length > 0)
+        {
+            return string.Join("\r\n", Choices.Select(i => i.Text));
+        }
+
+        return string.Empty;
+    }
 }
 
 public class Choice

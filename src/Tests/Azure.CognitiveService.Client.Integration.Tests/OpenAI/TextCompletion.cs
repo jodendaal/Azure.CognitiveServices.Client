@@ -26,7 +26,7 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
 
 
             Assert.That(completionResponse.IsSuccess, Is.True);
-            Assert.That(completionResponse.Value!.Choices[0].Text.Trim().Contains("This is a test"), Is.EqualTo(true));
+            Assert.That(completionResponse.Value!.ToString().Trim().Contains("This is a test"), Is.EqualTo(true));
         }
 
         [Test]
@@ -35,18 +35,16 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
             var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("textCompletion");
 
             var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
-            var completionResponse = await completionService.Get("Say This is a test.", config, options =>
+            TextCompletionResponse completionResponse = await completionService.Get("Say This is a test.", config, options =>
             {
                 options.MaxTokens = 200;
                 options.N = 1;
                 options.Temperature = 1;
             });
 
-            Console.WriteLine(completionResponse.ErrorMessage);
+            Console.WriteLine(completionResponse.ToString());
 
-            Assert.True(completionResponse.IsSuccess);
-            //Assert.That(completionResponse, Is.Not.Null);
-            //Assert.That(completionResponse.Choices[0].Text.Trim().Contains("This is a test"), Is.EqualTo(true));
+            Assert.That(completionResponse.ToString().Trim().Contains("This is a test"), Is.EqualTo(true));
         }
 
         [Test]
@@ -68,10 +66,10 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
             {
                 if (result.IsSuccess)
                 {
-                    response.Add(result.Value!.Choices[0].Text);
+                    response.Add(result.Value!.ToString());
                 }
 
-                Console.WriteLine(result?.Value?.Choices[0].Text);
+                Console.WriteLine(result?.Value?.ToString());
             }
 
             var responseText = string.Join(" ", response).Trim();
@@ -86,7 +84,7 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
         public async Task CompletionUnauthorisedResponse()
         {
             var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("textCompletion");
-            var badConfig = config with { ApiUrl = "" };
+            var badConfig = config with { ApiKey = "" };
             var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
             var completionResponse = await completionService.Get("Say This is a test.", badConfig, options =>
             {
@@ -107,10 +105,11 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
         public async Task CompletionBadRequestResponse()
         {
             var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("textCompletion");
-            config.ApiUrl = "";
+            var badConfig = config with { ApiUrl = "" };
+
             var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
            
-            var completionResponse = await completionService.Get("Say This is a test.", config, options =>
+            var completionResponse = await completionService.Get("Say This is a test.", badConfig, options =>
             {
                 options.MaxTokens = 200;
                 options.N = 1;

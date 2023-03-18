@@ -42,9 +42,9 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
         public async Task EmbeddingUnauthorisedResponse()
         {
             var config = ServiceProvider.GetRequiredService<IOptionsSnapshot<AzureOpenAIConfig>>().Get("textEmbeddings");
-            config.ApiKey = "";
+            var badConfig = config with { ApiKey = "" };
             var embeddingService = ServiceProvider.GetService<IEmbeddingsService>()!;
-            var embeddingsResponse = await embeddingService.Create("Some text you want to get embeddings for.", config);
+            var embeddingsResponse = await embeddingService.Create("Some text you want to get embeddings for.", badConfig);
 
 
             Assert.That(embeddingsResponse.IsSuccess, Is.False);
@@ -60,9 +60,10 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
         public async Task EmbeddingBadRequestResponse()
         {
             var config = ServiceProvider.GetRequiredService<IOptionsSnapshot<AzureOpenAIConfig>>().Get("textEmbeddings");
-            config.ApiKey = "";
+            var badConfig = config with { ApiUrl = "" };
+
             var embeddingService = ServiceProvider.GetService<IEmbeddingsService>()!;
-            var embeddingsResponse = await embeddingService.Create("Some text you want to get embeddings for.", config);
+            var embeddingsResponse = await embeddingService.Create("Some text you want to get embeddings for.", badConfig);
 
 
             Assert.That(embeddingsResponse.IsSuccess, Is.False);
