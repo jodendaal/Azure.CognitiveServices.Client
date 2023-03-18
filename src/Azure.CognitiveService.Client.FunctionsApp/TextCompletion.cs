@@ -70,7 +70,7 @@ namespace Azure.CognitiveService.Client.FunctionsApp
             }
             else
             {
-                _logger.LogError($"An error occured processing request {response.Exception.Message}");
+                _logger.LogError($"An error occured processing request {response.Exception?.Message} {response.Exception?.StackTrace}");
                 return new BadRequestResult();
             }           
         }
