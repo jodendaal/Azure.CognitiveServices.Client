@@ -10,6 +10,7 @@
 @inject ITextCompletionService TextCompletionSerice
 @inject IOptionsSnapshot<AzureOpenAIConfig> OpenAIConfig;
 
+<div class="px-4">
 <h1>Text Completion Streaming Example</h1>
 
 <p>This component demonstrates returning data from the TextCompletion endpoint.</p>
@@ -47,27 +48,26 @@
             <pre class="pre-response">
                 @result
             </pre>
-           </li>
+        </li>
     }
-  
 </ul>
-
+</div>
 
 @code {
     private AzureOpenAIConfig config => OpenAIConfig.Get("textCompletion");
     private string[] results = new string[0];
     private SearchModel searchModel = new()
-        {
-            MaxTokens = 500,
-            NoOfResults = 1,
-            SearchText = "List 5 reasons how AI going to change the world?"
-        };
+    {
+        MaxTokens = 2048,
+        NoOfResults = 2,
+        SearchText = "List 5 reasons how AI going to change the world?"
+    };
 
     private async Task GetCompletion()
     {
         results = new string[searchModel.NoOfResults];
 
-        await foreach (var result in TextCompletionSerice.GetStream(searchModel.SearchText, config, o =>
+        await foreach (var result in TextCompletionSerice.CreateStream(searchModel.SearchText, config, o =>
         {
             o.N = searchModel.NoOfResults;
             o.MaxTokens = searchModel.MaxTokens;

@@ -50,6 +50,14 @@ namespace Azure.CognitiveService.Client.ConsoleApp
                    o.DeploymentName = e.Value.Embeddings.DeploymentName;
                });
 
+               services.AddOptions<AzureOpenAIConfig>("chat").Configure<IOptions<AzureOpenAIConfiguration>>((o, e) =>
+               {
+                   o.ApiVersion = e.Value.Chat.ApiVersion;
+                   o.ApiKey = e.Value.Chat.ApiKey;
+                   o.ApiUrl = e.Value.Chat.ApiUrl;
+                   o.DeploymentName = e.Value.Chat.DeploymentName;
+               });
+
                services
                .AddAzureOpenAIHttpService(httpClientOptions => GetRetryPolicy())
                .AddAzureOpenAITextCompletion()
@@ -64,7 +72,7 @@ namespace Azure.CognitiveService.Client.ConsoleApp
 
             //Call Text Completion API Synchronise
             var textCompletionService = host.Services.GetRequiredService<ITextCompletionService>()!;
-            var textCompletionResponse = await textCompletionService.Get("Say This is a test.", textCompletionConfig, options => {
+            var textCompletionResponse = await textCompletionService.CreateAsync("Say This is a test.", textCompletionConfig, options => {
                 options.N = 1;
                 options.TopP = 1;
             });
@@ -73,7 +81,7 @@ namespace Azure.CognitiveService.Client.ConsoleApp
 
 
             //Call Text Completion API Stream
-            await foreach (var response in textCompletionService.GetStream("Say This is a test.", textCompletionConfig, options =>
+            await foreach (var response in textCompletionService.CreateStream("Say This is a test.", textCompletionConfig, options =>
             {
                 options.N = 1;
                 options.TopP = 1;

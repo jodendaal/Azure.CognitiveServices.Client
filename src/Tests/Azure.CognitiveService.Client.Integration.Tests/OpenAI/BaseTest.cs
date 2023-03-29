@@ -26,7 +26,8 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
               services
                .AddAzureOpenAIHttpService()
                .AddAzureOpenAITextCompletion()
-               .AddAzureOpenAITextEmbeddings();
+               .AddAzureOpenAITextEmbeddings()
+               .AddAzureOpenAIChatCompletion();
 
 
               services.Configure<AzureOpenAIConfiguration>(builder.Configuration.GetSection("OpenAI"));
@@ -45,6 +46,14 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
                   o.ApiKey = e.Value.Embeddings.ApiKey;
                   o.ApiUrl = e.Value.Embeddings.ApiUrl;
                   o.DeploymentName = e.Value.Embeddings.DeploymentName;
+              });
+
+              services.AddOptions<AzureOpenAIConfig>("chat").Configure<IOptions<AzureOpenAIConfiguration>>((o, e) =>
+              {
+                  o.ApiVersion = e.Value.Chat.ApiVersion;
+                  o.ApiKey = e.Value.Chat.ApiKey;
+                  o.ApiUrl = e.Value.Chat.ApiUrl;
+                  o.DeploymentName = e.Value.Chat.DeploymentName;
               });
 
           }).Build();

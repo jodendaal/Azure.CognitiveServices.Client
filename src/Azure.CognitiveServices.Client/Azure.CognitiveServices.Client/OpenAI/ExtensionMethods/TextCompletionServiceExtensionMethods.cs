@@ -6,34 +6,34 @@ namespace Azure.CognitiveServices.Client.OpenAI.ExtensionMethods
 {
     public static class TextCompletionServiceExtensionMethods
     {
-        public static Task<OpenAIHttpResult<TextCompletionResponse, ErrorResponse>> Get(this ITextCompletionService textCompletion, string prompt, AzureOpenAIConfig azureOpenAIConfig, Action<TextCompletionRequest>? options = null)
+        public static Task<OpenAIHttpResult<TextCompletionResponse, ErrorResponse>> CreateAsync(this ITextCompletionService textCompletion, string prompt, AzureOpenAIConfig azureOpenAIConfig, Action<TextCompletionRequest>? options = null)
         {
             var request = new TextCompletionRequest(prompt);
             options?.Invoke(request);
-            return textCompletion.Get(request, azureOpenAIConfig);
+            return textCompletion.CreateAsync(request, azureOpenAIConfig);
         }
 
-        public static Task<OpenAIHttpResult<TextCompletionResponse, ErrorResponse>> Get(this ITextCompletionService textCompletion, IList<string> prompt, AzureOpenAIConfig azureOpenAIConfig, Action<TextCompletionRequest>? options = null)
+        public static Task<OpenAIHttpResult<TextCompletionResponse, ErrorResponse>> CreateAsync(this ITextCompletionService textCompletion, IList<string> prompt, AzureOpenAIConfig azureOpenAIConfig, Action<TextCompletionRequest>? options = null)
         {
             var request = new TextCompletionRequest(prompt);
             options?.Invoke(request);
-            return textCompletion.Get(request, azureOpenAIConfig);
-        }
-
-
-        public static IAsyncEnumerable<OpenAIHttpResult<TextCompletionResponse, ErrorResponse>> GetStream(this ITextCompletionService textCompletion, string prompt, AzureOpenAIConfig azureOpenAIConfig, Action<TextCompletionRequest>? options = null)
-        {
-            var request = new TextCompletionRequest(prompt);
-            options?.Invoke(request);
-            return textCompletion.GetStream(request, azureOpenAIConfig);
+            return textCompletion.CreateAsync(request, azureOpenAIConfig);
         }
 
 
-        public static IAsyncEnumerable<OpenAIHttpResult<TextCompletionResponse, ErrorResponse>> GetStream(this ITextCompletionService textCompletion, IList<string> prompt, AzureOpenAIConfig azureOpenAIConfig, Action<TextCompletionRequest>? options = null)
+        public static IAsyncEnumerable<OpenAIHttpResult<TextCompletionResponse, ErrorResponse>> CreateStream(this ITextCompletionService textCompletion, string prompt, AzureOpenAIConfig azureOpenAIConfig, Action<TextCompletionRequest>? options = null)
         {
             var request = new TextCompletionRequest(prompt);
             options?.Invoke(request);
-            return textCompletion.GetStream(request, azureOpenAIConfig);
+            return textCompletion.CreateStream(request, azureOpenAIConfig);
+        }
+
+
+        public static IAsyncEnumerable<OpenAIHttpResult<TextCompletionResponse, ErrorResponse>> CreateStream(this ITextCompletionService textCompletion, IList<string> prompt, AzureOpenAIConfig azureOpenAIConfig, Action<TextCompletionRequest>? options = null)
+        {
+            var request = new TextCompletionRequest(prompt);
+            options?.Invoke(request);
+            return textCompletion.CreateStream(request, azureOpenAIConfig);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Azure.CognitiveService.Client.FunctionsApp
         private readonly ILogger<TextCompletionApi> _logger;
         private readonly ITextCompletionService _textCompletionService;
         private AzureOpenAIConfig _config;
-        public TextCompletionApi(ILogger<TextCompletionApi> log,ITextCompletionService textCompletionService,IOptionsMonitor<AzureOpenAIConfig> configs)
+        public TextCompletionApi(ILogger<TextCompletionApi> log, ITextCompletionService textCompletionService,IOptionsMonitor<AzureOpenAIConfig> configs)
         {
             _logger = log;
             _textCompletionService = textCompletionService;
@@ -58,7 +58,7 @@ namespace Azure.CognitiveService.Client.FunctionsApp
             };
 
 
-            var response = await _textCompletionService.Get(azureTextCompletionRequest, _config);
+            var response = await _textCompletionService.CreateAsync(azureTextCompletionRequest, _config);
 
             if (response.IsSuccess)
             {

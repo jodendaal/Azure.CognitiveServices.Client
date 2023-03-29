@@ -1,0 +1,36 @@
+﻿@using BlazorApp.Data;
+
+@if (IsVisible)
+{
+    <div class="converation-context">
+
+        <EditForm Model="@SearchModel" class="converation-context-form">
+
+
+          @*  <SelectInput ValueChanged="SelectedSearchModelChanged" TItem="ChatSearchModel" Items="SearchModels" Selector="(x => x.Name)" />*@
+
+            <h5>System</h5>
+            <InputTextArea title="system" @bind-Value="@SearchModel.System" class="system-area" />
+
+            <h5>Assistant</h5>
+            <InputTextArea title="assistant" @bind-Value="@SearchModel.Assistant" class="assistant-area" />
+        </EditForm>
+    </div>
+}
+
+
+@code {
+    [Parameter]
+    public ChatSearchModel SearchModel { get; set; }
+
+    [Parameter]
+    public bool IsVisible { get; set; } = true;
+
+    [Parameter] 
+    public EventCallback<ChatSearchModel> SelectedSearchModelChanged { get; set; }
+
+    [Parameter]
+    public List<ChatSearchModel> SearchModels { get; set; }
+
+   
+}

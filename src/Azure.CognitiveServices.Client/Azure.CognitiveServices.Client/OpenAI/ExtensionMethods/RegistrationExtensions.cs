@@ -16,13 +16,19 @@ namespace Azure.CognitiveServices.Client.OpenAI.ExtensionMethods
 
         public static IServiceCollection AddAzureOpenAITextCompletion(this IServiceCollection services)
         {
-            services.AddSingleton<ITextCompletionService, TextCompletionService>();
+            services.AddTransient<ITextCompletionService, TextCompletionService>();
             return services;
         }
 
         public static IServiceCollection AddAzureOpenAITextEmbeddings(this IServiceCollection services)
         {
-            services.AddSingleton<IEmbeddingsService, EmbeddingsService>();
+            services.AddTransient<IEmbeddingsService, EmbeddingsService>();
+            return services;
+        }
+
+        public static IServiceCollection AddAzureOpenAIChatCompletion(this IServiceCollection services)
+        {
+            services.AddTransient<IChatCompletionService, ChatCompletionService>();
             return services;
         }
 

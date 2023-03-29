@@ -75,3 +75,24 @@ a, .btn-link {
 .ul-response li {
     list-style-type: none;
 }
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: blue orange;
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 5px;
+    padding-right: 3px;
+}
+
+*::-webkit-scrollbar-track {
+    background-color: gray;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: rgba(32,33,35,var(--tw-bg-opacity));
+    border-radius: 20px;
+    border: 3px solid rgba(32,33,35,var(--tw-bg-opacity));
+}

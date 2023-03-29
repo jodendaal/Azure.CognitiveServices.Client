@@ -44,6 +44,15 @@ namespace Azure.CognitiveService.Client.FunctionsApp
                 o.ApiUrl = e.Value.Embeddings.ApiUrl;
                 o.DeploymentName = e.Value.Embeddings.DeploymentName;
             });
+
+
+            builder.Services.AddOptions<AzureOpenAIConfig>("chat").Configure<IOptions<AzureOpenAIConfiguration>>((o, e) =>
+            {
+                o.ApiVersion = e.Value.Chat.ApiVersion;
+                o.ApiKey = e.Value.Chat.ApiKey;
+                o.ApiUrl = e.Value.Chat.ApiUrl;
+                o.DeploymentName = e.Value.Chat.DeploymentName;
+            });
         }
     }
 }

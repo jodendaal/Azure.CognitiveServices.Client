@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.CognitiveService.Clie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.CognitiveService.Client.BlazorApp", "Azure.CognitiveService.Client.BlazorApp\Azure.CognitiveService.Client.BlazorApp.csproj", "{3D4A123A-8503-4677-A71B-13D5372D86B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.CognitiveService.Client.FunctionsApp", "Azure.CognitiveService.Client.FunctionsApp\Azure.CognitiveService.Client.FunctionsApp.csproj", "{C6A065DF-460C-464E-9744-D2ABE90C9F05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.CognitiveService.Client.FunctionsApp", "Azure.CognitiveService.Client.FunctionsApp\Azure.CognitiveService.Client.FunctionsApp.csproj", "{C6A065DF-460C-464E-9744-D2ABE90C9F05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
