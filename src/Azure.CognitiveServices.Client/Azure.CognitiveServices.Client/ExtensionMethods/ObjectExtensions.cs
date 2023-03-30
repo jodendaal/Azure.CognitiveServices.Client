@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Azure.CognitiveServices.Client.OpenAI.Models.Exceptions;
+using System.ComponentModel.DataAnnotations;
 
 namespace Azure.CognitiveServices.Client
 {
@@ -10,7 +11,7 @@ namespace Azure.CognitiveServices.Client
             Validator.TryValidateObject(@object, new ValidationContext(@object), validationErrors);
             if (validationErrors.Count > 0)
             {
-                throw new ArgumentException(string.Join(Environment.NewLine, validationErrors));
+                throw new OpenAIValidationException(string.Join(Environment.NewLine, validationErrors));
             }
         }
 

@@ -1,5 +1,4 @@
 ﻿using Azure.CognitiveServices.Client.Models.OperationResult;
-using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
 using System.Net;
 using System.Text.Json;
 

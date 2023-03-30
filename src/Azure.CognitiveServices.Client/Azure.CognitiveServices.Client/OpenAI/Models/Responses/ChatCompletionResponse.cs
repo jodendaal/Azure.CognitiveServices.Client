@@ -23,13 +23,13 @@ namespace Azure.CognitiveServices.Client.OpenAI.Models.Responses
 
     public class ChatChoice
     {
-        public Message Message { get; set; }
+        public ChatResponseMessage Message { get; set; }
         [JsonPropertyName("finish_reason")]
         public string FinishReason { get; set; }
         public int Index { get; set; }
     }
 
-    public class Message
+    public class ChatResponseMessage
     {
         public string Role { get; set; }
         public string Content { get; set; }

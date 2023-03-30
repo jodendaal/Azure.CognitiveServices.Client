@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
 using Microsoft.Extensions.Options;
 using Azure.CognitiveServices.Client.OpenAI.Services.Interfaces;
+using Azure.CognitiveServices.Client;
 
 namespace Azure.CognitiveService.Client.ConsoleApp
 {

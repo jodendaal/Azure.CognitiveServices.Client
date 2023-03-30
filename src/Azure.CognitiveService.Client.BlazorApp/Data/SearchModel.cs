@@ -1,5 +1,4 @@
 ﻿using Azure.CognitiveServices.Client.OpenAI.Models.Requests;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.ComponentModel.DataAnnotations;
 
 namespace Azure.CognitiveService.Client.BlazorApp.Data

@@ -1,5 +1,5 @@
 ﻿using Azure.CognitiveServices.Client.OpenAI.ExtensionMethods;
-using System.ComponentModel.DataAnnotations;
+using Azure.CognitiveServices.Client.OpenAI.Models.Exceptions;
 using System.Text.Json.Serialization;
 
 namespace Azure.CognitiveServices.Client.OpenAI.Models.Requests
@@ -133,7 +133,7 @@ namespace Azure.CognitiveServices.Client.OpenAI.Models.Requests
         {
             if (!_validRoles.Contains(role))
             {
-                throw new ArgumentException($"Role must be one of the following ${string.Join(",", _validRoles)}", nameof(role));
+                throw new OpenAIValidationException($"Role must be one of the following {string.Join(",", _validRoles)}");
             }
 
             return new Message(role, content);

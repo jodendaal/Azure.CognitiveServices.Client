@@ -2,7 +2,6 @@
 using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
 using Azure.CognitiveServices.Client.OpenAI.ExtensionMethods;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using System.Net;
 

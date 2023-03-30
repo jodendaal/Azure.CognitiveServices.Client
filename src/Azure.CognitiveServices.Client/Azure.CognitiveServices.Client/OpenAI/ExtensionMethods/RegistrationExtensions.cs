@@ -4,7 +4,7 @@ using Azure.CognitiveServices.Client.Services;
 using Azure.CognitiveServices.Client.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Azure.CognitiveServices.Client.OpenAI.ExtensionMethods
+namespace Azure.CognitiveServices.Client
 {
     public static class RegistrationExtensions
     {

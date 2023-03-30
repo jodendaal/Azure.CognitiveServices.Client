@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Azure.CognitiveServices.Client.OpenAI.Models.Exceptions;
+using System.ComponentModel.DataAnnotations;
 
 namespace Azure.CognitiveServices.Client.OpenAI.Models.Requests
 {
@@ -8,12 +9,12 @@ namespace Azure.CognitiveServices.Client.OpenAI.Models.Requests
         {
             if (fileContent == null || fileContent.Length == 0)
             {
-                throw new ArgumentException("FileContent is required");
+                throw new OpenAIValidationException("FileContent is required");
             }
 
             if (string.IsNullOrWhiteSpace(fileName))
             {
-                throw new ArgumentException("FileName is required");
+                throw new OpenAIValidationException("FileName is required");
             }
 
             FileContent = fileContent;

@@ -1,11 +1,10 @@
 using Azure.CognitiveService.API.Models;
+using Azure.CognitiveServices.Client.OpenAI.Models.Exceptions;
 using Azure.CognitiveServices.Client.OpenAI.Models.Requests;
 using Azure.CognitiveServices.Client.OpenAI.Models.Responses;
 using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Azure.CognitiveService.API.Controllers
 {
@@ -44,7 +43,7 @@ namespace Azure.CognitiveService.API.Controllers
 
                 return BadRequest(response.ErrorResponse?.Error);
             }
-            catch(ValidationException validationException)
+            catch(OpenAIValidationException validationException)
             {
                 return BadRequest(validationException.Message);
             }

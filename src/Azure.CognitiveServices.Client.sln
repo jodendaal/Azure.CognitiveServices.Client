@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.CognitiveService.Clie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.CognitiveService.Client.FunctionsApp", "Azure.CognitiveService.Client.FunctionsApp\Azure.CognitiveService.Client.FunctionsApp.csproj", "{C6A065DF-460C-464E-9744-D2ABE90C9F05}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azure.CognitiveService.API", "examples\Azure.CognitiveService.API\Azure.CognitiveService.API.csproj", "{35893388-83BA-4E15-9807-1B13D8354359}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{C6A065DF-460C-464E-9744-D2ABE90C9F05}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6A065DF-460C-464E-9744-D2ABE90C9F05}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6A065DF-460C-464E-9744-D2ABE90C9F05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35893388-83BA-4E15-9807-1B13D8354359}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35893388-83BA-4E15-9807-1B13D8354359}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35893388-83BA-4E15-9807-1B13D8354359}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35893388-83BA-4E15-9807-1B13D8354359}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,6 +55,7 @@ Global
 		{81C36AD5-CC8F-44A9-92B5-E6E3E9DC2170} = {037978BE-9B34-42F1-A38F-DC26056519D9}
 		{3D4A123A-8503-4677-A71B-13D5372D86B4} = {037978BE-9B34-42F1-A38F-DC26056519D9}
 		{C6A065DF-460C-464E-9744-D2ABE90C9F05} = {037978BE-9B34-42F1-A38F-DC26056519D9}
+		{35893388-83BA-4E15-9807-1B13D8354359} = {037978BE-9B34-42F1-A38F-DC26056519D9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {282454C1-5193-4F43-80C0-C577099EE54D}
