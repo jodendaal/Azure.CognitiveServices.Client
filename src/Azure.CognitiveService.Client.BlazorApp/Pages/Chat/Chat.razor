@@ -1,4 +1,4 @@
-﻿@page "/chat"
+@page "/chat"
 
 @using Azure.CognitiveService.Client
 @using Azure.CognitiveService.Client.BlazorApp.Data;
@@ -133,7 +133,8 @@
 
     private void LoadExamples()
     {
-        var json = File.ReadAllText($"{System.IO.Directory.GetCurrentDirectory()}{@"\wwwroot\ExampleChats.json"}");
+        var path = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "ExampleChats.json");
+        var json = File.ReadAllText(path);
         SearchModelExamples = JsonSerializer.Deserialize<List<ChatSearchModel>>(json);
         SelectedSearchModel = SearchModelExamples.First();
     }
