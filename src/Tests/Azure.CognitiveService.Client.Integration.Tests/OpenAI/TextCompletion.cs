@@ -14,7 +14,7 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
         {
             var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("textCompletion");
 
-            var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
+            var completionService = ServiceProvider.GetRequiredService<ITextCompletionService>();
             var completionResponse = await completionService.CreateAsync("Say This is a test.", config, options =>
             {
                 options.MaxTokens = 200;
@@ -33,7 +33,7 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
         {
             var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("textCompletion");
 
-            var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
+            var completionService = ServiceProvider.GetRequiredService<ITextCompletionService>()!;
             TextCompletionResponse completionResponse = await completionService.CreateAsync("Say This is a test.", config, options =>
             {
                 options.MaxTokens = 200;
@@ -51,7 +51,7 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
         {
             var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("textCompletion");
 
-            var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
+            var completionService = ServiceProvider.GetRequiredService<ITextCompletionService>();
 
             List<string> responseList = new();
 
@@ -84,7 +84,7 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
         {
             var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("textCompletion");
             var badConfig = config with { ApiKey = "" };
-            var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
+            var completionService = ServiceProvider.GetRequiredService<ITextCompletionService>();
             var completionResponse = await completionService.CreateAsync("Say This is a test.", badConfig, options =>
             {
                 options.MaxTokens = 200;
@@ -106,7 +106,7 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
             var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("textCompletion");
             var badConfig = config with { ApiUrl = "" };
 
-            var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
+            var completionService = ServiceProvider.GetRequiredService<ITextCompletionService>();
            
             var completionResponse = await completionService.CreateAsync("Say This is a test.", badConfig, options =>
             {

@@ -16,7 +16,7 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
         {
             var config = ServiceProvider.GetRequiredService<IOptionsSnapshot<AzureOpenAIConfig>>().Get("textEmbeddings");
 
-            var embeddingService = ServiceProvider.GetService<IEmbeddingsService>()!;
+            var embeddingService = ServiceProvider.GetRequiredService<IEmbeddingsService>();
             var embeddingsResponse = await embeddingService.Create("Some text you want to get embeddings for.",config);
 
 
@@ -30,7 +30,7 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
         {
             var config = ServiceProvider.GetRequiredService<IOptionsSnapshot<AzureOpenAIConfig>>().Get("textEmbeddings");
 
-            var embeddingService = ServiceProvider.GetService<IEmbeddingsService>()!;
+            var embeddingService = ServiceProvider.GetRequiredService<IEmbeddingsService>();
             EmbeddingsResponse embeddingsResponse = await embeddingService.Create("Some text you want to get embeddings for.", config);
 
             Assert.That(embeddingsResponse, Is.Not.Null);
@@ -43,7 +43,7 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
         {
             var config = ServiceProvider.GetRequiredService<IOptionsSnapshot<AzureOpenAIConfig>>().Get("textEmbeddings");
             var badConfig = config with { ApiKey = "" };
-            var embeddingService = ServiceProvider.GetService<IEmbeddingsService>()!;
+            var embeddingService = ServiceProvider.GetRequiredService<IEmbeddingsService>();
             var embeddingsResponse = await embeddingService.Create("Some text you want to get embeddings for.", badConfig);
 
 
@@ -62,7 +62,7 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
             var config = ServiceProvider.GetRequiredService<IOptionsSnapshot<AzureOpenAIConfig>>().Get("textEmbeddings");
             var badConfig = config with { ApiUrl = "" };
 
-            var embeddingService = ServiceProvider.GetService<IEmbeddingsService>()!;
+            var embeddingService = ServiceProvider.GetRequiredService<IEmbeddingsService>();
             var embeddingsResponse = await embeddingService.Create("Some text you want to get embeddings for.", badConfig);
 
 

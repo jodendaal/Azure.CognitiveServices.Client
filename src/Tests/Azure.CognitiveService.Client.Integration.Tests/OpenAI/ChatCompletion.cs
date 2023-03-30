@@ -14,7 +14,7 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
         {
             var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("chat");
 
-            var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
+            var completionService = ServiceProvider.GetRequiredService<ITextCompletionService>();
             var completionResponse = await completionService.CreateAsync("Say This is a test.", config, options =>
             {
                 options.MaxTokens = 200;
@@ -33,7 +33,7 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
         {
             var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("chat");
 
-            var chatService = ServiceProvider.GetService<IChatCompletionService>()!;
+            var chatService = ServiceProvider.GetRequiredService<IChatCompletionService>();
 
             var messages = new List<Message>
             {
@@ -57,7 +57,7 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
         {
             var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("chat");
 
-            var chatService = ServiceProvider.GetService<IChatCompletionService>()!;
+            var chatService = ServiceProvider.GetRequiredService<IChatCompletionService>();
 
             List<string?> responseList = new();
 
