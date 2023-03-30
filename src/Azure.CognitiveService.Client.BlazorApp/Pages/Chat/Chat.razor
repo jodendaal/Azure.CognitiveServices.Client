@@ -57,7 +57,7 @@
     private bool IsBusy = false;
     private List<ChatInfo> ConversationHistory = new List<ChatInfo>();
     private ChatSearchModel SelectedSearchModel { get; set; }
-    private ChatCompletionRequest ChatCompletionRequest { get; set; } = new ChatCompletionRequest(new List<Message>());
+    private ChatCompletionRequest ChatCompletionRequest { get; set; } = new ChatCompletionRequest(new List<Message>()) { MaxTokens=2048};
     private List<ChatSearchModel> SearchModelExamples = new List<ChatSearchModel>();
 
 
