@@ -29,11 +29,11 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
         }
 
         [Test]
-        public async Task ChatCompletionTest()
+        public async Task ChatCreateAsync()
         {
             var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("chat");
 
-            var completionService = ServiceProvider.GetService<IChatCompletionService>()!;
+            var chatService = ServiceProvider.GetService<IChatCompletionService>()!;
 
             var messages = new List<Message>
             {
@@ -44,104 +44,46 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
             };
 
             var request = new ChatCompletionRequest(messages);
-            var completionResponse = await completionService.CreateAsync(request, config);
+            var chatResponse = await chatService.CreateAsync(request, config);
 
 
-            Assert.That(completionResponse.IsSuccess, Is.True);
-            Assert.That(completionResponse.Value!.Choices.Length, Is.GreaterThanOrEqualTo(1));
+            Assert.That(chatResponse.IsSuccess, Is.True);
+            Assert.That(chatResponse.Value!.Choices.Length, Is.GreaterThanOrEqualTo(1));
          
         }
 
-        //[Test]
-        //public async Task CompletionImplicitConvert()
-        //{
-        //    var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("textCompletion");
+        [Test]
+        public async Task ChatCreateStream()
+        {
+            var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("chat");
 
-        //    var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
-        //    TextCompletionResponse completionResponse = await completionService.Get("Say This is a test.", config, options =>
-        //    {
-        //        options.MaxTokens = 200;
-        //        options.N = 1;
-        //        options.Temperature = 1;
-        //    });
+            var chatService = ServiceProvider.GetService<IChatCompletionService>()!;
 
-        //    Console.WriteLine(completionResponse.ToString());
+            List<string> responseList = new();
 
-        //    Assert.That(completionResponse.ToString().Trim().Contains("This is a test"), Is.EqualTo(true));
-        //}
+            await foreach (var response in chatService.CreateStream("Say This is a test.", config, options =>
+            {
+                options.MaxTokens = 200;
+                options.N = 1;
+                options.Temperature = 1;
 
-        //[Test]
-        //public async Task CompletionStream()
-        //{
-        //    var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("textCompletion");
+            }))
+            {
+                if (response.IsSuccess)
+                {
+                    responseList.Add(response.Value!.ToString());
+                }
 
-        //    var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
+                Console.WriteLine(response?.Value?.ToString());
+            }
 
-        //    List<string> response = new List<string>();
+            var responseText = string.Join(" ", responseList).Trim();
 
-        //    await foreach (var result in completionService.GetStream("Say This is a test.", config, options =>
-        //    {
-        //        options.MaxTokens = 200;
-        //        options.N = 1;
-        //        options.Temperature = 1;
+            Assert.That(responseText, Is.Not.Empty);
 
-        //    }))
-        //    {
-        //        if (result.IsSuccess)
-        //        {
-        //            response.Add(result.Value!.ToString());
-        //        }
-
-        //        Console.WriteLine(result?.Value?.ToString());
-        //    }
-
-        //    var responseText = string.Join(" ", response).Trim();
-        //    Console.WriteLine($"Complete Response \r\n{responseText}");
-
-        //    Assert.That(responseText, Is.EqualTo("This  is  a  test ."));
-
-        //}
+        }
 
 
-        //[Test]
-        //public async Task CompletionUnauthorisedResponse()
-        //{
-        //    var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("textCompletion");
-        //    var badConfig = config with { ApiKey = "" };
-        //    var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
-        //    var completionResponse = await completionService.Get("Say This is a test.", badConfig, options =>
-        //    {
-        //        options.MaxTokens = 200;
-        //        options.N = 1;
-        //        options.Temperature = 1;
-        //    });
 
-        //    Assert.That(completionResponse.IsSuccess, Is.False);
-        //    Assert.That(completionResponse.ErrorResponse, Is.Not.Null);
-        //    Assert.That(completionResponse.Exception, Is.Not.Null);
-        //    Assert.That(completionResponse.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
-        //    Assert.That(completionResponse.ErrorResponse.Error.Code, Is.EqualTo("401")); 
-        //    Assert.That(completionResponse.ErrorResponse.Error.Message.Contains("Access denied due"), Is.EqualTo(true));
-        //}
-
-        //[Test]
-        //public async Task CompletionBadRequestResponse()
-        //{
-        //    var config = ServiceProvider.GetRequiredService<IOptionsMonitor<AzureOpenAIConfig>>().Get("textCompletion");
-        //    var badConfig = config with { ApiUrl = "" };
-
-        //    var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
-
-        //    var completionResponse = await completionService.Get("Say This is a test.", badConfig, options =>
-        //    {
-        //        options.MaxTokens = 200;
-        //        options.N = 1;
-        //        options.Temperature = 1;
-        //    });
-
-        //    Assert.That(completionResponse.IsSuccess, Is.False);
-        //    Assert.That(completionResponse.Exception, Is.Not.Null);
-        //    Assert.That(completionResponse.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-        //}
     }
 }

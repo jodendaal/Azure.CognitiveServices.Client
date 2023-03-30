@@ -53,9 +53,9 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
 
             var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
 
-            List<string> response = new();
+            List<string> responseList = new();
 
-            await foreach (var result in completionService.CreateStream("Say This is a test.", config, options =>
+            await foreach (var response in completionService.CreateStream("Say This is a test.", config, options =>
             {
                 options.MaxTokens = 200;
                 options.N = 1;
@@ -63,15 +63,15 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
 
             }))
             {
-                if (result.IsSuccess)
+                if (response.IsSuccess)
                 {
-                    response.Add(result.Value!.ToString());
+                    responseList.Add(response.Value!.ToString());
                 }
 
-                Console.WriteLine(result?.Value?.ToString());
+                Console.WriteLine(response?.Value?.ToString());
             }
 
-            var responseText = string.Join(" ", response).Trim();
+            var responseText = string.Join(" ", responseList).Trim();
             Console.WriteLine($"Complete Response \r\n{responseText}");
 
             Assert.That(responseText, Is.Not.Empty);
