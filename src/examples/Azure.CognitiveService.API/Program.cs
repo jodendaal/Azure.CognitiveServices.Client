@@ -1,9 +1,9 @@
-using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
 using Microsoft.Extensions.Options;
 using Azure.CognitiveServices.Client;
 using Polly;
 using Polly.Extensions.Http;
 using Azure.CognitiveService.API.Models;
+using Azure.CognitiveServices.Client.OpenAI.Models;
 
 namespace Azure.CognitiveService.API
 {

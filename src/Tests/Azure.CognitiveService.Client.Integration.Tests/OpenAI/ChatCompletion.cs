@@ -1,9 +1,9 @@
 ﻿using NUnit.Framework;
-using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
 using Azure.CognitiveServices.Client.OpenAI.ExtensionMethods;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Azure.CognitiveServices.Client.OpenAI.Models.Requests;
+using Azure.CognitiveServices.Client.OpenAI.Models;
 
 namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
 {
@@ -59,7 +59,7 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
 
             var chatService = ServiceProvider.GetService<IChatCompletionService>()!;
 
-            List<string> responseList = new();
+            List<string?> responseList = new();
 
             await foreach (var response in chatService.CreateStream("Say This is a test.", config, options =>
             {

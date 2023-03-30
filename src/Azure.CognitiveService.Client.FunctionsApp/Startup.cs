@@ -1,7 +1,7 @@
 ﻿using Azure.CognitiveService.Client.FunctionsApp;
 using Azure.CognitiveService.Client.FunctionsApp.Models;
 using Azure.CognitiveServices.Client;
-using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
+using Azure.CognitiveServices.Client.OpenAI.Models;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

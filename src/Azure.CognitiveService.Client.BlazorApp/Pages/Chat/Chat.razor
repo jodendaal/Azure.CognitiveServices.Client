@@ -1,5 +1,5 @@
 @page "/chat"
-
+@using Azure.CognitiveServices.Client.OpenAI.Models;
 @using Azure.CognitiveService.Client
 @using Azure.CognitiveService.Client.BlazorApp.Models;
 @using Azure.CognitiveService.Client.BlazorApp.Pages.Chat.Components
@@ -58,8 +58,6 @@
     private ChatSearchModel SelectedSearchModel { get; set; } = new ChatSearchModel();
     private ChatCompletionRequest ChatCompletionRequest { get; set; } = new ChatCompletionRequest(new List<Message>()) { MaxTokens=2048};
     private List<ChatSearchModel> SearchModelExamples = new List<ChatSearchModel>();
-
-
    
 
     protected override Task OnInitializedAsync()

@@ -1,6 +1,6 @@
 using Azure.CognitiveService.Client.BlazorApp.Models;
 using Azure.CognitiveServices.Client;
-using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
+using Azure.CognitiveServices.Client.OpenAI.Models;
 using BlazorStrap;
 using Microsoft.Extensions.Options;
 using Polly;

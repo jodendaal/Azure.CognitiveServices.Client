@@ -1,8 +1,8 @@
 using Azure.CognitiveService.API.Models;
+using Azure.CognitiveServices.Client.OpenAI.Models;
 using Azure.CognitiveServices.Client.OpenAI.Models.Exceptions;
 using Azure.CognitiveServices.Client.OpenAI.Models.Requests;
 using Azure.CognitiveServices.Client.OpenAI.Models.Responses;
-using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 

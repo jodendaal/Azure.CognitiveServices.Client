@@ -1,5 +1,5 @@
-﻿using Azure.CognitiveServices.Client.OpenAI.Models.Responses;
-using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
+﻿using Azure.CognitiveServices.Client.OpenAI.Models;
+using Azure.CognitiveServices.Client.OpenAI.Models.Responses;
 using System.Text;
 using System.Text.Json;
 

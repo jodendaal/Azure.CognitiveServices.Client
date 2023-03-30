@@ -2,6 +2,7 @@
 using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
 using Azure.CognitiveServices.Client.OpenAI.Models.Responses;
 using Message = Azure.CognitiveServices.Client.OpenAI.Models.Requests.Message;
+using Azure.CognitiveServices.Client.OpenAI.Models;
 
 namespace Azure.CognitiveServices.Client.OpenAI.ExtensionMethods
 {

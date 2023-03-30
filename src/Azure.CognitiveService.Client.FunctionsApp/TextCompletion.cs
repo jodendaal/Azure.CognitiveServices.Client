@@ -1,6 +1,5 @@
 using System.Net;
 using System.Threading.Tasks;
-using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -14,6 +13,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Azure.CognitiveService.Client.FunctionsApp.Models;
+using Azure.CognitiveServices.Client.OpenAI.Models;
 
 namespace Azure.CognitiveService.Client.FunctionsApp
 {

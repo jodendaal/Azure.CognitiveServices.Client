@@ -1,4 +1,4 @@
-﻿namespace Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common
+﻿namespace Azure.CognitiveServices.Client.OpenAI.Models
 {
     public record AzureOpenAIConfig
     {

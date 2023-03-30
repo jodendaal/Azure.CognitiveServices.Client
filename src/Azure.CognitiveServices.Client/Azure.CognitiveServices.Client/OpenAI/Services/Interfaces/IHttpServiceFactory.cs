@@ -1,4 +1,4 @@
-﻿using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
+﻿using Azure.CognitiveServices.Client.OpenAI.Models;
 
 namespace Azure.CognitiveServices.Client.OpenAI.Services.Interfaces
 {
