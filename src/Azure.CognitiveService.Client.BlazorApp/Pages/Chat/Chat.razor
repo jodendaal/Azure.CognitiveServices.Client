@@ -38,7 +38,6 @@
 
             <ChatInput SearchModel="@SelectedSearchModel"
                 OnGenerateTextCompletionSubmitted="@OnTextCompletionSubmitted"
-                OnGenerateImageClicked="OnGenerateImageClicked"
                 IsBusy="@IsBusy">
             </ChatInput>
         </div>
@@ -152,25 +151,5 @@
     private async Task OnTextCompletionSubmitted()
     {
         await SendTextCompletionRequest(SelectedSearchModel.SearchText);
-    }
-
-    private async Task OnGenerateImageClicked()
-    {
-        //setIsProcessing(true, "Generating Image");
-
-        //var imageResponse = await OpenAIService.Images.Generate(SearchModel.SearchText, 1);
-        //if (imageResponse.IsSuccess)
-        //{
-        //    this.ConversationHistory.Add(new ChatInfo()
-        //        {
-        //            User = "AI",
-        //            Message = $@"<img src=""{imageResponse?.Result?.Data[0].Url}"" alt=""drawing"" width=""400"" />"
-        //        });
-        //}
-        //else
-        //{
-        //    this.ErrorText = imageResponse.ErrorResponse?.Error?.Message;
-        //}
-        //this.setIsProcessing(false);
     }
 }
