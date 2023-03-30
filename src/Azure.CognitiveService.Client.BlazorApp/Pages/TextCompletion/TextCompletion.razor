@@ -21,7 +21,7 @@
 
     <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">Prompt</label>
-        <InputText id="name" @bind-Value="searchModel.SearchText" class="form-control" />
+        <InputText id="name" @bind-Value="searchModel.SearchText" class="form-control " />
         <div id="emailHelp" class="form-text">Text to send to OpenAI Text Completion endpoint</div>
     </div>
 
@@ -58,8 +58,8 @@
     private string[] results = new string[0];
     private SearchModel searchModel = new()
     {
-        MaxTokens = 2048,
-        NoOfResults = 2,
+        MaxTokens = 300,
+        NoOfResults = 1,
         SearchText = "List 5 reasons how AI going to change the world?"
     };
 

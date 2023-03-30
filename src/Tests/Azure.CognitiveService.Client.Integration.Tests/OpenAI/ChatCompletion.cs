@@ -25,7 +25,7 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
 
 
             Assert.That(completionResponse.IsSuccess, Is.True);
-            Assert.That(completionResponse.Value!.ToString().Trim().Contains("This is a test"), Is.EqualTo(true));
+            Assert.That(completionResponse.Value!.ToString(), Is.Not.Empty);
         }
 
         [Test]

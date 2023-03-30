@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BlazorStrap" Version="5.1.102-Preview4" />
+    <PackageReference Include="BlazorStrap.V5" Version="5.1.102-Preview4" />
     <PackageReference Include="Markdig" Version="0.31.0" />
     <PackageReference Include="MarkdigExtensions.SyntaxHighlighting" Version="1.0.3" />
     <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="6.0.15" />

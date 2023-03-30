@@ -2,5 +2,12 @@
     --tw-text-opacity: 1;
     color: rgba(172,172,190,var(--tw-text-opacity));
     --tw-bg-opacity: 1;
-    background-color: rgba(32,33,35,var(--tw-bg-opacity));
+   /* background-color: rgba(32,33,35,var(--tw-bg-opacity));*/
+   background-color:transparent;
+   border:none;
+}
+
+.collapse-buttons{
+    display:flex;
+    justify-content:space-between;
 }

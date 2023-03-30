@@ -1,0 +1,92 @@
+﻿.header-group
+{
+    display: flex;
+    justify-content: space-between;
+}
+
+.request-options-container {
+    color: white;
+    padding-right: 10px;
+    padding-left: 10px;
+    --tw-bg-opacity: 1;
+    /*background-color: rgba(32,33,35,var(--tw-bg-opacity));*/
+    background-image: linear-gradient(180deg, rgb(52 53 65) 0%, #202123 70%);
+    width: 350px;
+}
+
+::deep .info-button{
+    background-color:transparent;
+    border:none;
+}
+
+::deep .info-button:focus {
+    background-color: transparent;
+    border: none;
+    box-shadow:none;
+}
+
+::deep .number-input:focus {
+    color: white;
+    background-color: rgba(68,70,84,var(--tw-bg-opacity));
+    border: none;
+    resize: none;
+    box-shadow: none;
+}
+
+::deep .number-input {
+    color: white;
+    background-color: rgba(68,70,84,var(--tw-bg-opacity));
+    border: none;
+    resize: none;
+    outline:none!important;
+}
+
+.stop-list-item {
+    display: flex;
+    justify-content: space-between;
+   
+}
+
+.stop-list-item > button
+{
+    background:none;
+    border:none;
+}
+
+.stop-list-group-item {
+    background-color: rgba(52,53,65);
+    color: white;
+}
+
+.stop-input{
+
+}
+
+.stop-input, ::deep .chat-input {
+    --tw-bg-opacity: 0.5;
+    background-color: rgba(68,70,84,var(--tw-bg-opacity));
+    color: white;
+    border: none;
+    border-top-color: rgba(32, 33, 35, 0.5);
+    border-right-color: rgba(32, 33, 35, 0.5);
+    border-bottom-color: rgba(32, 33, 35, 0.5);
+    border-left-color: rgba(32, 33, 35, 0.5);
+    outline: none !important;
+}
+
+.stop-input:focus, ::deep .chat-input:focus {
+    --tw-bg-opacity: 0.5;
+    background-color: rgba(68,70,84,var(--tw-bg-opacity));
+    color: white;
+    border: none;
+    border-top-color: rgba(32, 33, 35, 0.5);
+    border-right-color: rgba(32, 33, 35, 0.5);
+    border-bottom-color: rgba(32, 33, 35, 0.5);
+    border-left-color: rgba(32, 33, 35, 0.5);
+}
+
+.stop-add-button {
+    background-color: transparent;
+    color: white;
+    border-color: rgba(68,70,84,var(--tw-bg-opacity));
+}

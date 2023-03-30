@@ -1,18 +1,27 @@
 ﻿@using BlazorApp.Data;
+@using BlazorStrap;
 
 @if (IsVisible)
 {
     <div class="converation-context">
 
         <EditForm Model="@SearchModel" class="converation-context-form">
-
-
-          @*  <SelectInput ValueChanged="SelectedSearchModelChanged" TItem="ChatSearchModel" Items="SearchModels" Selector="(x => x.Name)" />*@
-
-            <h5>System</h5>
-            <InputTextArea title="system" @bind-Value="@SearchModel.System" class="system-area" />
-
-            <h5>Assistant</h5>
+           <div class="mb-3 mt-3">
+                <label>Examples</label>
+                <InputSelect ValueExpression="@(()=>SearchModel.Id)" class="form-select select-list"
+                         Value="@SearchModel.Id"
+                         ValueChanged="@((string value) => OnChange(value ))">
+                    @foreach (var model in SearchModels)
+                    {
+                        <option value="@model.Id">@model.Name</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="mb-3">
+                <label>System</label>
+                <InputTextArea title="system" @bind-Value="@SearchModel.System" class="system-area" />
+            </div>
+            <label>Assistant</label>
             <InputTextArea title="assistant" @bind-Value="@SearchModel.Assistant" class="assistant-area" />
         </EditForm>
     </div>
@@ -20,17 +29,20 @@
 
 
 @code {
-    [Parameter]
-    public ChatSearchModel SearchModel { get; set; }
+        [Parameter]
+        public ChatSearchModel SearchModel { get; set; }
 
-    [Parameter]
-    public bool IsVisible { get; set; } = true;
+        [Parameter]
+        public bool IsVisible { get; set; } = true;
 
-    [Parameter] 
-    public EventCallback<ChatSearchModel> SelectedSearchModelChanged { get; set; }
+        [Parameter] 
+        public EventCallback<ChatSearchModel> SelectedSearchModelChanged { get; set; }
 
-    [Parameter]
-    public List<ChatSearchModel> SearchModels { get; set; }
+        [Parameter]
+        public List<ChatSearchModel> SearchModels { get; set; }
 
-   
+        private async Task OnChange(string value)
+        {
+            await SelectedSearchModelChanged.InvokeAsync(this.SearchModels.FirstOrDefault(searchModel => searchModel.Id == value));
+        }
 }

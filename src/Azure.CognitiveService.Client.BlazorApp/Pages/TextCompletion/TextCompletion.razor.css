@@ -1,0 +1,15 @@
+﻿::deep .input:focus {
+    color: white;
+    background-color: rgba(68,70,84,var(--tw-bg-opacity));
+    border: none;
+    resize: none;
+    box-shadow: none;
+}
+
+::deep .input {
+    color: white;
+    background-color: rgba(68,70,84,var(--tw-bg-opacity));
+    border: none;
+    resize: none;
+    outline: none !important;
+}

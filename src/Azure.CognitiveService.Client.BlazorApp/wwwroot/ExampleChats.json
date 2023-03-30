@@ -1,0 +1,33 @@
+[
+  {
+    "Name": "Code Generator",
+    "SearchText": "write me a simple class that adds 2 numbers together and write a unit test using xunit , an API Controller and then a HttpClient To call the API",
+    "System": "You are a code generator, when generating code markdown ensure to include the language e.g c# should start with ```csharp. dont give any explanations or description code only",
+    "Assistant": ""
+  },
+  {
+    "Name": "Json Response Personal Details",
+    "SearchText": "extract the person details from this  Paul Newman 1985 london uk",
+    "System": "respond only with json",
+    "Assistant": ""
+  },
+  {
+    "Name": "Json Response Quiz",
+    "SearchText": "Generate 10 general knowledge multiple choice questions on music,geagraphy and movies, include the correct answer in a feild called answer",
+    "System": "respond only with json",
+    "Assistant": ""
+  },
+  {
+    "Name": "Support Assistant",
+    "SearchText": "How do I fix my issue?",
+    "System": "You are a helpfull support agent",
+    "Assistant": "Ticket : 1024, Title : Unable to send emails, Content : Unable to connect to SMTP server"
+  },
+  {
+    "Name": "Natural Language to Sql",
+    "SearchText": "how many customers ordered apples in the last month from china and what was the total cost?",
+    "System": "You are a natural language to SQL generator.Respond only with valid T SQL",
+    "Assistant": ""
+  }
+
+]

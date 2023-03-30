@@ -1,6 +1,7 @@
 using Azure.CognitiveService.Client.BlazorApp.Data;
 using Azure.CognitiveServices.Client.OpenAI.ExtensionMethods;
 using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
+using BlazorStrap;
 using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Extensions.Http;
@@ -50,6 +51,8 @@ namespace Azure.CognitiveService.Client.BlazorApp
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
+
+            builder.Services.AddBlazorStrap();
 
             var app = builder.Build();
 

@@ -1,0 +1,139 @@
+﻿@using Azure.CognitiveService.Client.BlazorApp.Data;
+@using Azure.CognitiveServices.Client.OpenAI.Models.Requests;
+@using BlazorStrap;
+
+
+@if (IsVisible)
+{
+
+    <div class="request-options-container">
+        <h5 class="mt-3">Parameters</h5>
+        <hr class="hr" />
+        <EditForm Model="@Options" OnValidSubmit="@OnGenerateTextCompletionSubmitted">
+
+            <div class="header-group">
+                <div>
+                    <label data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top">Max Tokens</label>
+                    <BSButton IsOutlined="true" Color="BSColor.Primary" DataId="maxTokensTooltip" Class="info-button"> <i class="oi oi-info"></i></BSButton>
+                    <BSPopover Placement="Placement.Bottom" Target="maxTokensTooltip" MouseOver="true">
+                        <Header></Header>
+                        <Content>Set a limit on the number of tokens per model response. The API supports a maximum of 4000 tokens shared between the prompt (including system message, examples, message history, and user query) and the model's response. One token is roughly 4 characters for typical English text.</Content>
+                    </BSPopover>
+                </div>
+
+                <InputNumber @bind-Value="Options.MaxTokens" min="1" max="4000" step="1" class="number-input"></InputNumber>
+            </div>
+
+            <BSInput InputType="InputType.Range" @bind-Value="Options.MaxTokens" min="1" max="4000" />
+
+            <div class="header-group">
+                <div>
+                    <label>Temperature</label>
+                    <BSButton IsOutlined="true" Color="BSColor.Primary" DataId="temperatureTooltip" Class="info-button"> <i class="oi oi-info"></i></BSButton>
+                    <BSPopover Placement="Placement.Bottom" Target="temperatureTooltip" MouseOver="true">
+                        <Header></Header>
+                        <Content>
+                            Controls randomness. Lowering the temperature means that the model will produce more repetitive and deterministic responses. Increasing the temperature will result in more unexpected or creative responses. Try adjusting temperature or Top P but not both.
+                        </Content>
+                    </BSPopover>
+                </div>
+                <InputNumber @bind-Value="Options.Temperature" min="0" max="1" step="0.01" class="number-input"></InputNumber>
+            </div>
+            <BSInput InputType="InputType.Range" @bind-Value="Options.Temperature" min="0" max="1" step="0.01" />
+
+
+            <div class="header-group">
+                <div>
+                    <label>Top P</label>
+                    <BSButton IsOutlined="true" Color="BSColor.Primary" DataId="topPTooltip" Class="info-button"> <i class="oi oi-info"></i></BSButton>
+                    <BSPopover Placement="Placement.Bottom" Target="topPTooltip" MouseOver="true">
+                        <Header></Header>
+                        <Content>Similar to temperature, this controls randomness but uses a different method. Lowering Top P will narrow the model’s token selection to likelier tokens. Increasing Top P will let the model choose from tokens with both high and low likelihood. Try adjusting temperature or Top P but not both.</Content>
+                    </BSPopover>
+                </div>
+                <InputNumber @bind-Value="Options.TopP" min="0" max="1" step="0.01" class="number-input"></InputNumber>
+            </div>
+            <BSInput InputType="InputType.Range" @bind-Value="Options.TopP" min="0" max="1" step="0.01" />
+
+
+            <div>
+                <div>
+
+                    <label>Stop</label>
+                    <BSButton IsOutlined="true" Color="BSColor.Primary" DataId="stopTooltip" Class="info-button"> <i class="oi oi-info"></i></BSButton>
+                    <BSPopover Placement="Placement.Bottom" Target="stopTooltip" MouseOver="true">
+                            <Header></Header>
+                        <Content>Make the model end its response at a desired point. The model response will end before the specified sequence, so it won't contain the stop sequence text. For ChatGPT, using &lt;|im_end|&gt; ensures that the model response doesn't generate a follow-up user query. You can include as many as four stop sequences.</Content>
+                    </BSPopover>
+                </div>
+
+                <div class="input-group mb-3">
+                    <InputText title="prompt" id="name" @bind-Value="Stop" class="form-control chat-input shadow-none" />
+                    <button title="add" type="submit" class="stop-add-button input-group-text"> <i class="oi oi-plus"></i></button>
+                </div>
+
+
+                @if(Options?.Stop != null)
+                {
+                    <ul class="list-group">
+                        @for (var i = 0; i <= Options.Stop.Count - 1; i++)
+                        {
+                            var buttonNumber = i;
+
+                            <li class="list-group-item stop-list-group-item">
+                                <div class="stop-list-item">
+                                    <div>
+                                        @Options.Stop[i]
+                                    </div>
+                                    <button type="button" @onclick="() =>RemoveItem(buttonNumber)"><i class="oi oi-x"></i></button>
+                                </div>
+                            </li>
+                        }
+                       @* @foreach (var item in Options.Stop)
+                        {
+                            <li class="list-group-item stop-list-group-item">
+                                <div class="stop-list-item">
+                                    <div>
+                                        @item
+                                    </div>
+                                    <button type="button"><i class="oi oi-x"></i></button>
+                                </div>
+                            </li>
+                        }*@
+                    </ul>
+                }
+               
+
+               
+            </div>
+        </EditForm>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsVisible { get; set; } = true;
+
+    [Parameter]
+    public ChatCompletionRequest Options { get; set; }
+
+
+    private void OnGenerateTextCompletionSubmitted()
+    {
+        if(Options.Stop == null)
+        {
+            Options.Stop = new List<string>();
+        }
+
+        Options.Stop.Add(Stop);
+        Stop = "";
+
+    }
+
+    private void RemoveItem(int index)
+    {
+        Options.Stop?.RemoveAt(index);
+    }
+
+    private string Stop { get; set; }
+}
