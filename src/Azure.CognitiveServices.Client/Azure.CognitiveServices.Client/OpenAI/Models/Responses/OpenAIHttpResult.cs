@@ -25,7 +25,7 @@ namespace Azure.CognitiveServices.Client.OpenAI.Models.Responses
 
         public TError? ErrorResponse { get; internal set; }
 
-        public static implicit operator OpenAIHttpResult<T, TError>(T? result) => new OpenAIHttpResult<T, TError>(result, HttpStatusCode.OK);
-        public static implicit operator T(OpenAIHttpResult<T, TError> result) => result.Value;
+        public static implicit operator OpenAIHttpResult<T, TError>(T? result) => new(result, HttpStatusCode.OK);
+        public static implicit operator T(OpenAIHttpResult<T, TError> result) => result.Value!;
     }
 }

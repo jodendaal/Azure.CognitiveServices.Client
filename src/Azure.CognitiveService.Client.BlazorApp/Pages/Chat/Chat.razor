@@ -55,7 +55,7 @@
     private string StatusText = "";
     private bool IsBusy = false;
     private List<ChatInfo> ConversationHistory = new List<ChatInfo>();
-    private ChatSearchModel SelectedSearchModel { get; set; }
+    private ChatSearchModel SelectedSearchModel { get; set; } = new ChatSearchModel();
     private ChatCompletionRequest ChatCompletionRequest { get; set; } = new ChatCompletionRequest(new List<Message>()) { MaxTokens=2048};
     private List<ChatSearchModel> SearchModelExamples = new List<ChatSearchModel>();
 
@@ -134,16 +134,16 @@
     {
         var path = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "ExampleChats.json");
         var json = File.ReadAllText(path);
-        SearchModelExamples = JsonSerializer.Deserialize<List<ChatSearchModel>>(json);
-        SelectedSearchModel = SearchModelExamples.First();
+        SearchModelExamples = JsonSerializer.Deserialize<List<ChatSearchModel>>(json) ?? new List<ChatSearchModel>();
+        SelectedSearchModel = SearchModelExamples!.First();
     }
 
-    private async Task OnHideSidePanelClicked()
+    private void OnHideSidePanelClicked()
     {
         this.SidePanelVisible = !this.SidePanelVisible;
     }
 
-    private async Task OnHideRightSidePanelClicked()
+    private void OnHideRightSidePanelClicked()
     {
         this.RightSidePanelVisible = !this.RightSidePanelVisible;
     }

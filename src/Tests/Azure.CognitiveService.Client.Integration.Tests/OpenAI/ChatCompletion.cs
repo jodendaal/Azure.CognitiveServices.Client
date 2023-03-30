@@ -48,7 +48,7 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
 
 
             Assert.That(completionResponse.IsSuccess, Is.True);
-            Assert.That(completionResponse.Value.Choices.Length, Is.GreaterThanOrEqualTo(1));
+            Assert.That(completionResponse.Value!.Choices.Length, Is.GreaterThanOrEqualTo(1));
          
         }
 

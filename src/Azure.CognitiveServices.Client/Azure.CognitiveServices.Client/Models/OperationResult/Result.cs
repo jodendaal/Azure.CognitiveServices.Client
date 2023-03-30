@@ -17,7 +17,7 @@
         public Exception Exception { get; set; }
         public bool IsSuccess => Exception == null;
 
-        public static implicit operator Result<T>(T? result) => new Result<T>(result);
-        public static implicit operator T(Result<T> result) => result.Value;
+        public static implicit operator Result<T>(T? result) => new(result);
+        public static implicit operator T(Result<T> result) => result.Value!;
     }
 }

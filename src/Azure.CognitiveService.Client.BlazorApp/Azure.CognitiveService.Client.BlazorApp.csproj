@@ -7,6 +7,14 @@
     <UserSecretsId>5a00e71a-eabc-4c44-88a0-405eabe6ecff</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;CS8618</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;CS8618</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="BlazorStrap" Version="5.1.102-Preview4" />
     <PackageReference Include="BlazorStrap.V5" Version="5.1.102-Preview4" />

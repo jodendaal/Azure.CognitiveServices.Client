@@ -27,7 +27,7 @@ namespace Azure.CognitiveServices.Client
 
         public static MultipartFormDataContent ToMultipartFormDataContent(this object @object)
         {
-            MultipartFormDataContent formData = new MultipartFormDataContent();
+            MultipartFormDataContent formData = new();
 
             foreach (var prop in @object.GetType().GetProperties())
             {

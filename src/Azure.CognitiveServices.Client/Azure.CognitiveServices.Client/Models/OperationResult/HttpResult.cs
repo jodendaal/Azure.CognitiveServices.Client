@@ -16,7 +16,7 @@ namespace Azure.CognitiveServices.Client.Models.OperationResult
 
         public HttpStatusCode StatusCode { get; set; }
 
-        public static implicit operator HttpResult<T>(T? result) => new HttpResult<T>(result, HttpStatusCode.OK);
-        public static implicit operator T(HttpResult<T> result) => result.Value;
+        public static implicit operator HttpResult<T>(T? result) => new(result, HttpStatusCode.OK);
+        public static implicit operator T(HttpResult<T> result) => result.Value!;
     }
 }

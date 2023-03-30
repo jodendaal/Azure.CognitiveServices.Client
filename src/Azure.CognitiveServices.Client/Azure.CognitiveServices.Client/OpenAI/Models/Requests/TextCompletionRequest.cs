@@ -39,6 +39,6 @@ namespace Azure.CognitiveServices.Client.OpenAI.Models.Requests
         public int? BestOf { get; set; }
 
         [JsonPropertyName("logit_bias")]
-        public Dictionary<string, double> LogitBias { get; set; }
+        public Dictionary<string, double>? LogitBias { get; set; }
     }
 }

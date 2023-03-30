@@ -7,7 +7,7 @@ namespace Azure.CognitiveServices.Client.OpenAI.Services
 {
     public class BaseOpenAIService
     {
-        private readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions()
+        private readonly JsonSerializerOptions _jsonSerializerOptions = new()
         {
             DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -15,7 +15,7 @@ namespace Azure.CognitiveServices.Client.OpenAI.Services
 
         internal HttpRequestMessage CreateRequest(string uri, AzureOpenAIConfig config, object data)
         {
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, uri);
+            HttpRequestMessage message = new(HttpMethod.Post, uri);
 
             if (!string.IsNullOrWhiteSpace(config.ApiKey))
             {

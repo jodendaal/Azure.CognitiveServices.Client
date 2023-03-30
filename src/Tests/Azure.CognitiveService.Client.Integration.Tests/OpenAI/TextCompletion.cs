@@ -53,7 +53,7 @@ namespace Azure.CognitiveService.Client.Integration.Tests.OpenAI
 
             var completionService = ServiceProvider.GetService<ITextCompletionService>()!;
 
-            List<string> response = new List<string>();
+            List<string> response = new();
 
             await foreach (var result in completionService.CreateStream("Say This is a test.", config, options =>
             {

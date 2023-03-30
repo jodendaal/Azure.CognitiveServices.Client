@@ -73,7 +73,7 @@
             o.MaxTokens = searchModel.MaxTokens;
         }))
         {
-            var index = result.Value.Choices[0].Index;
+            var index = result.Value!.Choices[0].Index;
             results[index] += result.Value.ToString();
             StateHasChanged();
         }
