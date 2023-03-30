@@ -3,13 +3,13 @@ using Azure.CognitiveServices.Client.OpenAI.Models.Requests;
 using Azure.CognitiveServices.Client.OpenAI.Models.Responses;
 using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
 using Azure.CognitiveServices.Client.OpenAI.Services;
-using Azure.CognitiveServices.Client.Services.Interfaces;
+using Azure.CognitiveServices.Client.OpenAI.Services.Interfaces;
 
 public class ChatCompletionService : BaseOpenAIService, IChatCompletionService
 {
-    private readonly IHttpService _httpService;
+    private readonly IOpenAIHttpService _httpService;
 
-    public ChatCompletionService(IHttpService httpService)
+    public ChatCompletionService(IOpenAIHttpService httpService)
     {
         _httpService = httpService;
     }
@@ -45,16 +45,4 @@ public class ChatCompletionService : BaseOpenAIService, IChatCompletionService
 
         return _httpService.SendRequestStream<ChatStreamCompletionResponse, ErrorResponse>(request);
     }
-
-    //public async Task<Result<TextCompletionResponse>> GetTest(TextCompletionRequest completionRequest, AzureOpenAIConfig azureOpenAIConfig)
-    //{
-    //    completionRequest.Validate();
-
-    //    var request = CreateRequest(
-    //    $"{azureOpenAIConfig.ApiUrl}/openai/deployments/{azureOpenAIConfig.DeploymentName}/completions?api-version={azureOpenAIConfig.ApiVersion}",
-    //        azureOpenAIConfig,
-    //        completionRequest);
-
-    //    return _httpService.SendRequest<TextCompletionResponse, ErrorResponse>(request);
-    //}
 }

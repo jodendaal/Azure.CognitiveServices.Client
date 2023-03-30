@@ -1,9 +1,9 @@
 ﻿using Azure.CognitiveServices.Client.OpenAI.Models.Requests;
 using Azure.CognitiveServices.Client.OpenAI.Models.Responses;
 
-namespace Azure.CognitiveServices.Client.Services.Interfaces
+namespace Azure.CognitiveServices.Client.OpenAI.Services.Interfaces
 {
-    public interface IHttpService
+    public interface IOpenAIHttpService
     {
         Task<OpenAIHttpResult<T, TError>> SendRequest<T, TError>(HttpRequestMessage request);
         IAsyncEnumerable<OpenAIHttpResult<T, TError>> SendRequestStream<T, TError>(HttpRequestMessage request);
@@ -15,5 +15,5 @@ namespace Azure.CognitiveServices.Client.Services.Interfaces
         IAsyncEnumerable<OpenAIHttpResult<T, TError>> PostStream<T, TError>(string? path, object @object);
     }
 
-   
+
 }

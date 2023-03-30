@@ -2,15 +2,14 @@
 using Azure.CognitiveServices.Client.OpenAI.Models.Responses;
 using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
 using Azure.CognitiveServices.Client.OpenAI.Services.Interfaces;
-using Azure.CognitiveServices.Client.Services.Interfaces;
 
 namespace Azure.CognitiveServices.Client.OpenAI.Services
 {
     public class EmbeddingsService : BaseOpenAIService, IEmbeddingsService
     {
-        private readonly IHttpService _httpService;
+        private readonly IOpenAIHttpService _httpService;
 
-        public EmbeddingsService(IHttpService httpService)
+        public EmbeddingsService(IOpenAIHttpService httpService)
         {
             _httpService = httpService;
         }

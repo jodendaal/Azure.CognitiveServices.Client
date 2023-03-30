@@ -1,6 +1,6 @@
 ﻿using Azure.CognitiveServices.Client.OpenAI.Models.Requests;
 using Azure.CognitiveServices.Client.OpenAI.Models.Responses;
-using Azure.CognitiveServices.Client.Services.Interfaces;
+using Azure.CognitiveServices.Client.OpenAI.Services.Interfaces;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
@@ -8,7 +8,7 @@ using System.Text.Json;
 namespace Azure.CognitiveServices.Client.Services
 {
 
-    public class HttpService : IHttpService
+    public class OpenAIHttpService : IOpenAIHttpService
     {
         private readonly HttpClient _httpClient;
         private readonly JsonSerializerOptions _jsonSerializerOptions = new()
@@ -17,7 +17,7 @@ namespace Azure.CognitiveServices.Client.Services
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 
-        public HttpService(HttpClient httpClient)
+        public OpenAIHttpService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
@@ -141,7 +141,7 @@ namespace Azure.CognitiveServices.Client.Services
             }
         }
 
-        public static async Task<OpenAIHttpResult<T, TError>> HandleResponse<T, TError>(HttpResponseMessage response)
+        public async Task<OpenAIHttpResult<T, TError>> HandleResponse<T, TError>(HttpResponseMessage response)
         {
             if (response.IsSuccessStatusCode)
             {
@@ -153,7 +153,7 @@ namespace Azure.CognitiveServices.Client.Services
             return new OpenAIHttpResult<T, TError>(new Exception(response.StatusCode.ToString(), new Exception(errorResponse)), response.StatusCode, errorResponse);
         }
 
-        private static async Task<OpenAIHttpResult<T, TError>> ErrorHandler<T, TError>(Func<Task<OpenAIHttpResult<T, TError>>> func)
+        private async Task<OpenAIHttpResult<T, TError>> ErrorHandler<T, TError>(Func<Task<OpenAIHttpResult<T, TError>>> func)
         {
             try
             {

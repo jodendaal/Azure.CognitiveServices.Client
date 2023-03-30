@@ -1,7 +1,6 @@
 ﻿using Azure.CognitiveServices.Client.OpenAI.Services;
 using Azure.CognitiveServices.Client.OpenAI.Services.Interfaces;
 using Azure.CognitiveServices.Client.Services;
-using Azure.CognitiveServices.Client.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Azure.CognitiveServices.Client
@@ -10,7 +9,7 @@ namespace Azure.CognitiveServices.Client
     {
         public static IServiceCollection AddAzureOpenAIHttpService(this IServiceCollection services, Action<IHttpClientBuilder> httpClientOptions = default!)
         {
-            ConfigureHttpClientBuilder(services.AddHttpClient<IHttpService, HttpService>(), httpClientOptions);
+            ConfigureHttpClientBuilder(services.AddHttpClient<IOpenAIHttpService, OpenAIHttpService>(), httpClientOptions);
             return services;
         }
 
