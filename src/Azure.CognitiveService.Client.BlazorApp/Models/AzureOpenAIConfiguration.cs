@@ -1,4 +1,4 @@
-﻿namespace Azure.CognitiveService.Client.BlazorApp
+﻿namespace Azure.CognitiveService.Client.BlazorApp.Models
 {
     public class AzureOpenAIConfiguration
     {

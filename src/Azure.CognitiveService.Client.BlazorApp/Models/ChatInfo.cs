@@ -1,4 +1,4 @@
-﻿namespace Azure.CognitiveService.Client.BlazorApp.Data
+﻿namespace Azure.CognitiveService.Client.BlazorApp.Models
 {
     public class ChatInfo
     {

@@ -1,10 +1,9 @@
-﻿namespace Azure.CognitiveService.Client.FunctionsApp
+﻿namespace Azure.CognitiveService.API.Models
 {
     public class AzureOpenAIConfiguration
     {
         public Textcompletion TextCompletion { get; set; }
         public Embeddings Embeddings { get; set; }
-
         public Chat Chat { get; set; }
     }
 

@@ -1,3 +1,4 @@
+using Azure.CognitiveService.Client.BlazorApp.Models;
 using Azure.CognitiveServices.Client;
 using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
 using BlazorStrap;

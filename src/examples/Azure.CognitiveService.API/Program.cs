@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Azure.CognitiveServices.Client;
 using Polly;
 using Polly.Extensions.Http;
+using Azure.CognitiveService.API.Models;
 
 namespace Azure.CognitiveService.API
 {
