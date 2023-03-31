@@ -36,13 +36,13 @@
         public bool IsVisible { get; set; } = true;
 
         [Parameter] 
-        public EventCallback<ChatSearchModel> SelectedSearchModelChanged { get; set; }
+        public EventCallback<string> SelectedSearchModelChanged { get; set; }
 
         [Parameter]
         public List<ChatSearchModel> SearchModels { get; set; }
 
         private async Task OnChange(string value)
         {
-            await SelectedSearchModelChanged.InvokeAsync(this.SearchModels.FirstOrDefault(searchModel => searchModel.Id == value));
+            await SelectedSearchModelChanged.InvokeAsync(this.SearchModels.First(searchModel => searchModel.Id == value).Name);
         }
 }

@@ -63,11 +63,12 @@
         TopP = 0.95
     };
     private List<ChatSearchModel> SearchModelExamples = new List<ChatSearchModel>();
-   
+
 
     protected override Task OnInitializedAsync()
     {
         LoadExamples();
+        SelectedSearchModel = SearchModelExamples!.First();
         return base.OnInitializedAsync();
     }
 
@@ -98,7 +99,7 @@
                 o.MaxTokens = ChatCompletionRequest.MaxTokens;
                 o.TopP = ChatCompletionRequest.TopP;
                 o.Temperature = ChatCompletionRequest.Temperature;
-                
+
             }))
             {
                 this.ConversationHistory[ConversationHistory.Count - 1].Message += result.Value!.Choices[0].Delta.Content;
@@ -119,7 +120,7 @@
     {
         this.SelectedSearchModel.SearchText = text;
     }
-  
+
     private void setIsProcessing(bool value, string statusMessage = "Generating")
     {
         this.StatusText = value ? statusMessage : "";
@@ -127,9 +128,10 @@
         this.StateHasChanged();
     }
 
-    void OnExampleChanged(ChatSearchModel value)
+    void OnExampleChanged(string name)
     {
-        SelectedSearchModel = value;
+        LoadExamples();
+        SelectedSearchModel = SearchModelExamples.First(i => i.Name == name);
     }
 
 
@@ -138,7 +140,7 @@
         var path = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "ExampleChats.json");
         var json = File.ReadAllText(path);
         SearchModelExamples = JsonSerializer.Deserialize<List<ChatSearchModel>>(json) ?? new List<ChatSearchModel>();
-        SelectedSearchModel = SearchModelExamples!.First();
+       
     }
 
     private void OnHideSidePanelClicked()
