@@ -4,6 +4,10 @@ using Polly;
 using Polly.Extensions.Http;
 using Azure.CognitiveService.API.Models;
 using Azure.CognitiveServices.Client.OpenAI.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace Azure.CognitiveService.API
 {
@@ -13,6 +17,38 @@ namespace Azure.CognitiveService.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+
+            //Add Auth
+            builder.Services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.Authority = builder.Configuration["Authorization:Authority"];
+                options.TokenValidationParameters.ValidTypes = new[] { builder.Configuration["Authorization:ValidTokenType"] };
+                options.Audience = builder.Configuration["Authorization:Audience"];
+                options.TokenValidationParameters.ValidateAudience = bool.Parse(builder.Configuration["Authorization:ValidateAudience"]);
+                options.RequireHttpsMetadata = true;
+                //x.RequireHttpsMetadata = false;
+                //x.SaveToken = true;
+                //x.TokenValidationParameters = new TokenValidationParameters
+                //{
+                //    ValidateIssuerSigningKey = true,
+                //    IssuerSigningKey = new SymmetricSecurityKey(key),
+                //    ValidateIssuer = false,
+                //    ValidateAudience = false
+                //};
+            });
+
+            builder.Services.AddAuthorization(options =>
+            {
+                //options.AddPolicy("read_access", policy =>
+                //    policy.RequireClaim("scope", "read"));
+            });
+
             //Add Azure OpenAI
             builder.Services
                .AddAzureOpenAIHttpService(httpClientOptions => GetRetryPolicy())
@@ -21,7 +57,19 @@ namespace Azure.CognitiveService.API
                .AddAzureOpenAIChatCompletion();
 
             // Add services to the container.
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(options => {
+
+                if (bool.Parse(builder.Configuration["Authorization:Enabled"]))
+                {
+                    var policy = new AuthorizationPolicyBuilder()
+                   .RequireAuthenticatedUser()
+                   .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                   .Build();
+
+                    options.Filters.Add(new AuthorizeFilter(policy));
+                }
+            });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
