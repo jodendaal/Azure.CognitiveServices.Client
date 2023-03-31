@@ -96,7 +96,7 @@
 
     private async Task SendChatCompletionRequest()
     {
-        SelectedSearchModel.SearchText = string.Empty;
+      
 
         this.setIsProcessing(true);
 
@@ -106,6 +106,7 @@
         try
         {
             var request = CreateRequest();
+            SelectedSearchModel.SearchText = string.Empty;
             await foreach (var result in ChatCompletionSerice.CreateStream(request, config))
             {
                 this.ConversationHistory[ConversationHistory.Count - 1].Message += result.Value!.Choices[0].Delta.Content;
