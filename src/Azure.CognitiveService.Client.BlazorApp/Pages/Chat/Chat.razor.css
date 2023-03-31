@@ -17,3 +17,8 @@
     left: 10%;
     text-align: center;
 }
+
+::deep .code-modal {
+    background-color: red;
+}
+

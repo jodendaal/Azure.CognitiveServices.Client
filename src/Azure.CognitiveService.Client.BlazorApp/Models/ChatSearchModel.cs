@@ -20,6 +20,13 @@ namespace Azure.CognitiveService.Client.BlazorApp.Models
 
         public string Assistant { get; set; } = "";
 
-        public ChatCompletionRequest ChatCompletionRequest { get; set; } = new ChatCompletionRequest(new List<Message>());
+        public ChatCompletionRequest ChatCompletionRequest { get; set; } = new ChatCompletionRequest(new List<Message>()) {
+
+            MaxTokens = 2048,
+            Temperature = 0.7,
+            TopP = 0.95
+        };
+
+        public int NumberOfPreviousMessageToInclude { get; set; } = 10;
     }
 }

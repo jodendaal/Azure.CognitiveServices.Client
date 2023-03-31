@@ -90,3 +90,10 @@
     color: white;
     border-color: rgba(68,70,84,var(--tw-bg-opacity));
 }
+
+.chat-view-code-button {
+    --tw-bg-opacity: 0.5;
+    background-color: rgba(68,70,84,var(--tw-bg-opacity));
+    border: none;
+    color: white;
+}

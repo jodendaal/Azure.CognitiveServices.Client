@@ -6,6 +6,7 @@
 @using Azure.CognitiveServices.Client.OpenAI.Models.Requests;
 @using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
 @using Azure.CognitiveServices.Client.OpenAI.ExtensionMethods;
+@using BlazorStrap;
 @using Microsoft.Extensions.Options;
 @using System.Text.Json;
 @inject IChatCompletionService ChatCompletionSerice
@@ -43,12 +44,38 @@
         </div>
     </div>
 
-    <RequestOptions Options="@ChatCompletionRequest" IsVisible="@RightSidePanelVisible" NoOfPreviousMessagetoInclude="@NumberOfPreviousMessageToInclude"></RequestOptions>
+    <RequestOptions SearchModel="@SelectedSearchModel" IsVisible="@RightSidePanelVisible" OnViewCodeClicked="OnShowCodeClicked"></RequestOptions>
 
 </div>
 
+
+<BSModal IsCentered="true" Class="code-modal" @ref="refModal">
+   
+    <Header>Sample Code</Header>
+    <Content>
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label">Url</label>
+
+            <textarea class="form-control text-area" value="@CodeExampleUrl()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+        </div>
+        <div class="mb-3">
+          <label for="exampleFormControlTextarea1" class="form-label">JSON Body</label>
+            <textarea class="form-control text-area" value=" @JsonRequest()" rows="15" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Headers</label>
+            <textarea class="form-control text-area" value="@CodeExampleHeaders()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+        </div>
+    </Content>
+      
+    <Footer Context="modal">
+        <button class="button" @onclick="OnCloseCodeClicked">Close</button>
+    </Footer>
+
+</BSModal>
+
 @code {
-    private int NumberOfPreviousMessageToInclude { get; set; } = 10;
+    BSModal refModal;
     private AzureOpenAIConfig config => OpenAIConfig.Get("chat");
     private bool SidePanelVisible = true;
     private bool RightSidePanelVisible = true;
@@ -57,14 +84,7 @@
     private bool IsBusy = false;
     private List<ChatInfo> ConversationHistory = new List<ChatInfo>();
     private ChatSearchModel SelectedSearchModel { get; set; } = new ChatSearchModel();
-    private ChatCompletionRequest ChatCompletionRequest { get; set; } = new ChatCompletionRequest(new List<Message>()) 
-    { 
-        MaxTokens=2048,
-        Temperature = 0.7,
-        TopP = 0.95
-    };
     private List<ChatSearchModel> SearchModelExamples = new List<ChatSearchModel>();
-
 
     protected override Task OnInitializedAsync()
     {
@@ -74,31 +94,19 @@
     }
 
 
-    private async Task SendTextCompletionRequest(string text)
+    private async Task SendChatCompletionRequest()
     {
         SelectedSearchModel.SearchText = string.Empty;
 
         this.setIsProcessing(true);
 
-        var messagesRequest = new List<Message>();
-        messagesRequest.Add(Message.Create(ChatRoleType.System, SelectedSearchModel.System));
-        messagesRequest.Add(Message.Create(ChatRoleType.Assistant, SelectedSearchModel.Assistant));
-        messagesRequest.AddRange(GetPreviousMessageContext());
-        messagesRequest.Add(Message.Create(ChatRoleType.User, text));
-
-        this.ConversationHistory.Add(new ChatInfo() { User = "User", Message = text });
+        this.ConversationHistory.Add(new ChatInfo() { User = "User", Message = this.SelectedSearchModel.SearchText });
         this.ConversationHistory.Add(new ChatInfo() { User = "AI", Message = string.Empty });
 
         try
         {
-            await foreach (var result in ChatCompletionSerice.CreateStream(messagesRequest, config, o =>
-            {
-                o.N =1;
-                o.MaxTokens = ChatCompletionRequest.MaxTokens;
-                o.TopP = ChatCompletionRequest.TopP;
-                o.Temperature = ChatCompletionRequest.Temperature;
-
-            }))
+            var request = CreateRequest();
+            await foreach (var result in ChatCompletionSerice.CreateStream(request, config))
             {
                 this.ConversationHistory[ConversationHistory.Count - 1].Message += result.Value!.Choices[0].Delta.Content;
                 StateHasChanged();
@@ -109,15 +117,64 @@
             ErrorText = $"An error occured : {ex.Message}";
         }
 
-        //SelectedSearchModel.Assistant += $"\r\n{this.ConversationHistory[ConversationHistory.Count - 1].Message}";
-
         this.setIsProcessing(false);
+    }
+
+    private string CodeExampleHeaders()
+    {
+        return $"Content-Type : application/json\r\napi-key : YOUR_API_KEY";
+    }
+
+    private string CodeExampleUrl()
+    {
+        return $"{config.ApiUrl}/openai/deployments/{config.DeploymentName}/chat/completions?api-version={config.ApiVersion}";
+    }
+    private string JsonRequest()
+    {
+        var request = CreateRequest();
+        var json = JsonSerializer.Serialize(request,new JsonSerializerOptions()
+        {
+            WriteIndented = true,
+            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        });
+        return json;
+    }
+
+    private ChatCompletionRequest CreateRequest()
+    {
+        var messages = new List<Message>();
+        if (!string.IsNullOrWhiteSpace(SelectedSearchModel.System))
+        {
+            messages.Add(Message.Create(ChatRoleType.System, SelectedSearchModel.System));
+        }
+
+        if (!string.IsNullOrWhiteSpace(SelectedSearchModel.Assistant))
+        {
+            messages.Add(Message.Create(ChatRoleType.Assistant, SelectedSearchModel.Assistant));
+        }
+
+        messages.AddRange(GetPreviousMessageContext());
+
+        if (!string.IsNullOrWhiteSpace(SelectedSearchModel.SearchText))
+        {
+            messages.Add(Message.Create(ChatRoleType.User, SelectedSearchModel.SearchText));
+        }
+        var request = new ChatCompletionRequest(messages)
+        {
+            N = 1,
+            MaxTokens = SelectedSearchModel.ChatCompletionRequest.MaxTokens,
+            TopP = SelectedSearchModel.ChatCompletionRequest.TopP,
+            Temperature = SelectedSearchModel.ChatCompletionRequest.Temperature
+        };
+
+        return request;
     }
 
     private List<Message> GetPreviousMessageContext()
     {
-        decimal messagePerType = this.NumberOfPreviousMessageToInclude == 0? 0 : this.NumberOfPreviousMessageToInclude / 2;
-        int previousMessageCount = (int)Math.Floor(messagePerType);
+        decimal messagePerType = this.SelectedSearchModel.NumberOfPreviousMessageToInclude == 0 ? 0 : (decimal)this.SelectedSearchModel.NumberOfPreviousMessageToInclude / 2;
+        int previousMessageCount = (int)Math.Ceiling(messagePerType);
 
         var userMessages= this.ConversationHistory.Where(i => i.User == "User");
         var aIMessags = this.ConversationHistory.Where(i => i.User == "AI");
@@ -159,6 +216,7 @@
     void OnExampleChanged(string name)
     {
         LoadExamples();
+        this.ConversationHistory.Clear();
         SelectedSearchModel = SearchModelExamples.First(i => i.Name == name);
     }
 
@@ -168,7 +226,17 @@
         var path = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "ExampleChats.json");
         var json = File.ReadAllText(path);
         SearchModelExamples = JsonSerializer.Deserialize<List<ChatSearchModel>>(json) ?? new List<ChatSearchModel>();
-       
+
+    }
+
+      private void OnCloseCodeClicked()
+    {
+        refModal.HideAsync();
+    }
+
+    private void OnShowCodeClicked()
+    {
+        refModal.ShowAsync();
     }
 
     private void OnHideSidePanelClicked()
@@ -183,6 +251,6 @@
 
     private async Task OnTextCompletionSubmitted()
     {
-        await SendTextCompletionRequest(SelectedSearchModel.SearchText);
+        await SendChatCompletionRequest();
     }
 }

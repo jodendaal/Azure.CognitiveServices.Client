@@ -9,7 +9,7 @@
     <div class="request-options-container">
         <h5 class="mt-3">Parameters</h5>
         <hr class="hr" />
-        <EditForm Model="@Options" OnValidSubmit="@OnGenerateTextCompletionSubmitted">
+        <EditForm Model="@SearchModel" OnValidSubmit="@OnGenerateTextCompletionSubmitted">
 
             <div class="header-group">
                 <div>
@@ -21,10 +21,10 @@
                     </BSPopover>
                 </div>
 
-                <InputNumber @bind-Value="Options.MaxTokens" min="1" max="4000" step="1" class="number-input"></InputNumber>
+                <InputNumber @bind-Value="SearchModel.ChatCompletionRequest.MaxTokens" min="1" max="4000" step="1" class="number-input"></InputNumber>
             </div>
 
-            <BSInput InputType="InputType.Range" @bind-Value="Options.MaxTokens" min="1" max="4000" />
+            <BSInput InputType="InputType.Range" @bind-Value="SearchModel.ChatCompletionRequest.MaxTokens" min="1" max="4000" />
 
             <div class="header-group">
                 <div>
@@ -37,9 +37,9 @@
                         </Content>
                     </BSPopover>
                 </div>
-                <InputNumber @bind-Value="Options.Temperature" min="0" max="1" step="0.01" class="number-input"></InputNumber>
+                <InputNumber @bind-Value="SearchModel.ChatCompletionRequest.Temperature" min="0" max="1" step="0.01" class="number-input"></InputNumber>
             </div>
-            <BSInput InputType="InputType.Range" @bind-Value="Options.Temperature" min="0" max="1" step="0.01" />
+            <BSInput InputType="InputType.Range" @bind-Value="SearchModel.ChatCompletionRequest.Temperature" min="0" max="1" step="0.01" />
 
 
             <div class="header-group">
@@ -51,9 +51,9 @@
                         <Content>Similar to temperature, this controls randomness but uses a different method. Lowering Top P will narrow the model’s token selection to likelier tokens. Increasing Top P will let the model choose from tokens with both high and low likelihood. Try adjusting temperature or Top P but not both.</Content>
                     </BSPopover>
                 </div>
-                <InputNumber @bind-Value="Options.TopP" min="0" max="1" step="0.01" class="number-input"></InputNumber>
+                <InputNumber @bind-Value="SearchModel.ChatCompletionRequest.TopP" min="0" max="1" step="0.01" class="number-input"></InputNumber>
             </div>
-            <BSInput InputType="InputType.Range" @bind-Value="Options.TopP" min="0" max="1" step="0.01" />
+            <BSInput InputType="InputType.Range" @bind-Value="SearchModel.ChatCompletionRequest.TopP" min="0" max="1" step="0.01" />
 
 
             <div>
@@ -73,17 +73,17 @@
                 </div>
 
 
-                @if(Options?.Stop != null)
+                @if(SearchModel.ChatCompletionRequest?.Stop != null)
                 {
                     <ul class="list-group">
-                        @for (var i = 0; i <= Options.Stop.Count - 1; i++)
+                        @for (var i = 0; i <= SearchModel.ChatCompletionRequest.Stop.Count - 1; i++)
                         {
                             var buttonNumber = i;
 
                             <li class="list-group-item stop-list-group-item">
                                 <div class="stop-list-item">
                                     <div>
-                                        @Options.Stop[i]
+                                        @SearchModel.ChatCompletionRequest.Stop[i]
                                     </div>
                                     <button type="button" @onclick="() =>RemoveItem(buttonNumber)"><i class="oi oi-x"></i></button>
                                 </div>
@@ -108,18 +108,21 @@
             </div>
 
 
-            <div class="header-group">
+            <div class="header-group mt-3">
                 <div>
                     <label>Past message included</label>
-                    <BSButton IsOutlined="true" Color="BSColor.Primary" DataId="topPTooltip" Class="info-button"> <i class="oi oi-info"></i></BSButton>
-                    <BSPopover Placement="Placement.Bottom" Target="topPTooltip" MouseOver="true">
+                    <BSButton IsOutlined="true" Color="BSColor.Primary" DataId="previousMessageTooltip" Class="info-button"> <i class="oi oi-info"></i></BSButton>
+                    <BSPopover Placement="Placement.Bottom" Target="previousMessageTooltip" MouseOver="true">
                         <Header></Header>
                         <Content>Select the number of past messages to include in each new API request. This helps give the model context for new user queries. Setting this number to 10 will include 5 user queries and 5 system responses.</Content>
                     </BSPopover>
                 </div>
-                <InputNumber @bind-Value="@NoOfPreviousMessagetoInclude" min="0" max="20" step="1" class="number-input" ></InputNumber>
+                <InputNumber @bind-Value="@SearchModel.NumberOfPreviousMessageToInclude" min="0" max="20" step="1" class="number-input" ></InputNumber>
             </div>
-            <BSInput InputType="InputType.Range" @bind-Value="NoOfPreviousMessagetoInclude" min="0" max="20" step="1"/>
+            <BSInput InputType="InputType.Range" @bind-Value="@SearchModel.NumberOfPreviousMessageToInclude" min="0" max="20" step="1" />
+
+
+            <button type="button" @onclick="OnViewCodeClicked" class="chat-view-code-button mt-3"><i class="oi oi-code"></i> View Code</button>
         </EditForm>
     </div>
 }
@@ -129,34 +132,26 @@
     public bool IsVisible { get; set; } = true;
 
     [Parameter]
-    public int NoOfPreviousMessagetoInclude { get; set; }
+    public ChatSearchModel SearchModel { get; set; }
 
     [Parameter]
-    public EventCallback<int> NoOfPreviousMessagetoIncludeChanged { get; set; }
-
-    [Parameter]
-    public ChatCompletionRequest Options { get; set; }
-
-    private void OnNoOfPreviousMessagetoIncludeChanged()
-    {
-        this.NoOfPreviousMessagetoIncludeChanged.InvokeAsync(NoOfPreviousMessagetoInclude);
-    }
+    public EventCallback OnViewCodeClicked { get; set; }
 
     private void OnGenerateTextCompletionSubmitted()
     {
-        if(Options.Stop == null)
+        if (SearchModel.ChatCompletionRequest.Stop == null)
         {
-            Options.Stop = new List<string>();
+            SearchModel.ChatCompletionRequest.Stop = new List<string>();
         }
 
-        Options.Stop.Add(Stop);
+        SearchModel.ChatCompletionRequest.Stop.Add(Stop);
         Stop = "";
 
     }
 
     private void RemoveItem(int index)
     {
-        Options.Stop?.RemoveAt(index);
+        SearchModel.ChatCompletionRequest.Stop?.RemoveAt(index);
     }
 
     private string Stop { get; set; }
