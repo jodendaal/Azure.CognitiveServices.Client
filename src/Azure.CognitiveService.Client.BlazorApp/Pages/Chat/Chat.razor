@@ -56,7 +56,12 @@
     private bool IsBusy = false;
     private List<ChatInfo> ConversationHistory = new List<ChatInfo>();
     private ChatSearchModel SelectedSearchModel { get; set; } = new ChatSearchModel();
-    private ChatCompletionRequest ChatCompletionRequest { get; set; } = new ChatCompletionRequest(new List<Message>()) { MaxTokens=2048};
+    private ChatCompletionRequest ChatCompletionRequest { get; set; } = new ChatCompletionRequest(new List<Message>()) 
+    { 
+        MaxTokens=2048,
+        Temperature = 0.7,
+        TopP = 0.95
+    };
     private List<ChatSearchModel> SearchModelExamples = new List<ChatSearchModel>();
    
 

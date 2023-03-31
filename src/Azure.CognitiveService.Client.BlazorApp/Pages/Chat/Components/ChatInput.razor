@@ -3,7 +3,7 @@
 <EditForm Model="@SearchModel" OnValidSubmit="@OnGenerateTextCompletionSubmitted">
 
     <div class="input-group chat-input-group">
-        <InputText title="prompt" id="name" @bind-Value="SearchModel.SearchText" class="form-control chat-input shadow-none" />
+        <InputTextArea title="prompt" id="name" @bind-Value="SearchModel.SearchText" class="form-control chat-input shadow-none" />
         <button title="send" type="submit" class="chat-input-button" disabled="@IsBusy"> <i class="oi oi-location"></i></button>
 
     </div>
