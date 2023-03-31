@@ -8,6 +8,7 @@
     <AssemblyVersion>0.0.0.2</AssemblyVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <Version>$(AssemblyVersion)</Version>
+    <PackageId>CognitiveServices.AI.Client</PackageId>
     
   </PropertyGroup>
 
