@@ -17,8 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.CognitiveService.Clie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Azure.CognitiveService.API", "examples\Azure.CognitiveService.API\Azure.CognitiveService.API.csproj", "{35893388-83BA-4E15-9807-1B13D8354359}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorApp.Docker", "examples\BlazorApp.Docker\BlazorApp.Docker.csproj", "{3E02BF12-2281-4DDB-90D4-25E2AD150DC6}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
