@@ -43,11 +43,12 @@
         </div>
     </div>
 
-    <RequestOptions Options="@ChatCompletionRequest" IsVisible="@RightSidePanelVisible"></RequestOptions>
+    <RequestOptions Options="@ChatCompletionRequest" IsVisible="@RightSidePanelVisible" NoOfPreviousMessagetoInclude="@NumberOfPreviousMessageToInclude"></RequestOptions>
 
 </div>
 
 @code {
+    private int NumberOfPreviousMessageToInclude { get; set; } = 10;
     private AzureOpenAIConfig config => OpenAIConfig.Get("chat");
     private bool SidePanelVisible = true;
     private bool RightSidePanelVisible = true;
@@ -78,17 +79,14 @@
         SelectedSearchModel.SearchText = string.Empty;
 
         this.setIsProcessing(true);
-        this.ConversationHistory.Add(new ChatInfo() { User = "TimDoesTech", Message = text });
 
-
-        var messagesRequest = new List<Message>()
-            {
-                Message.Create(ChatRoleType.System,SelectedSearchModel.System),
-                Message.Create(ChatRoleType.Assistant, SelectedSearchModel.Assistant)
-            };
-
+        var messagesRequest = new List<Message>();
+        messagesRequest.Add(Message.Create(ChatRoleType.System, SelectedSearchModel.System));
+        messagesRequest.Add(Message.Create(ChatRoleType.Assistant, SelectedSearchModel.Assistant));
+        messagesRequest.AddRange(GetPreviousMessageContext());
         messagesRequest.Add(Message.Create(ChatRoleType.User, text));
 
+        this.ConversationHistory.Add(new ChatInfo() { User = "User", Message = text });
         this.ConversationHistory.Add(new ChatInfo() { User = "AI", Message = string.Empty });
 
         try
@@ -111,9 +109,35 @@
             ErrorText = $"An error occured : {ex.Message}";
         }
 
-        SelectedSearchModel.Assistant += $"\r\n{this.ConversationHistory[ConversationHistory.Count - 1].Message}";
+        //SelectedSearchModel.Assistant += $"\r\n{this.ConversationHistory[ConversationHistory.Count - 1].Message}";
 
         this.setIsProcessing(false);
+    }
+
+    private List<Message> GetPreviousMessageContext()
+    {
+        decimal messagePerType = this.NumberOfPreviousMessageToInclude == 0? 0 : this.NumberOfPreviousMessageToInclude / 2;
+        int previousMessageCount = (int)Math.Floor(messagePerType);
+
+        var userMessages= this.ConversationHistory.Where(i => i.User == "User");
+        var aIMessags = this.ConversationHistory.Where(i => i.User == "AI");
+
+        if(userMessages.Count() > messagePerType)
+        {
+            userMessages = userMessages.Skip(Math.Max(0, userMessages.Count() - previousMessageCount)).Take(previousMessageCount);
+        }
+
+        if (aIMessags.Count() > messagePerType)
+        {
+            aIMessags = aIMessags.Skip(Math.Max(0, aIMessags.Count() - previousMessageCount)).Take(previousMessageCount);
+        }
+
+        var result = new List<Message>();
+        result.AddRange(userMessages.Select(message => Message.Create(ChatRoleType.User,message.Message)));
+        result.AddRange(aIMessags.Select(message => Message.Create(ChatRoleType.Assistant, message.Message)));
+
+        return result;
+
     }
 
     void OnAudioTextUpdated(string text)
@@ -123,6 +147,10 @@
 
     private void setIsProcessing(bool value, string statusMessage = "Generating")
     {
+        if (value)
+        {
+            this.ErrorText = "";
+        }
         this.StatusText = value ? statusMessage : "";
         this.IsBusy = value;
         this.StateHasChanged();

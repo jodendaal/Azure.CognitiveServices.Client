@@ -106,6 +106,20 @@
 
                
             </div>
+
+
+            <div class="header-group">
+                <div>
+                    <label>Past message included</label>
+                    <BSButton IsOutlined="true" Color="BSColor.Primary" DataId="topPTooltip" Class="info-button"> <i class="oi oi-info"></i></BSButton>
+                    <BSPopover Placement="Placement.Bottom" Target="topPTooltip" MouseOver="true">
+                        <Header></Header>
+                        <Content>Select the number of past messages to include in each new API request. This helps give the model context for new user queries. Setting this number to 10 will include 5 user queries and 5 system responses.</Content>
+                    </BSPopover>
+                </div>
+                <InputNumber @bind-Value="@NoOfPreviousMessagetoInclude" min="0" max="20" step="1" class="number-input" ></InputNumber>
+            </div>
+            <BSInput InputType="InputType.Range" @bind-Value="NoOfPreviousMessagetoInclude" min="0" max="20" step="1"/>
         </EditForm>
     </div>
 }
@@ -115,8 +129,18 @@
     public bool IsVisible { get; set; } = true;
 
     [Parameter]
+    public int NoOfPreviousMessagetoInclude { get; set; }
+
+    [Parameter]
+    public EventCallback<int> NoOfPreviousMessagetoIncludeChanged { get; set; }
+
+    [Parameter]
     public ChatCompletionRequest Options { get; set; }
 
+    private void OnNoOfPreviousMessagetoIncludeChanged()
+    {
+        this.NoOfPreviousMessagetoIncludeChanged.InvokeAsync(NoOfPreviousMessagetoInclude);
+    }
 
     private void OnGenerateTextCompletionSubmitted()
     {
