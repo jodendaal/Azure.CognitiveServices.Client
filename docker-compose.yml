@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  blazor:
+    image: adamlonsdale/azure-cognitiveservice-blazor:latest
+    build:
+      context: .
+      dockerfile: src/Azure.CognitiveService.Client.BlazorApp/Dockerfile.release
+    ports:
+      - 5127:5127
