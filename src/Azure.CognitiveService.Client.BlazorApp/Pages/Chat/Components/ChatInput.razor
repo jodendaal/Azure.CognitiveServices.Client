@@ -3,7 +3,14 @@
 <EditForm Model="@SearchModel" OnValidSubmit="@OnGenerateTextCompletionSubmitted">
 
     <div class="input-group chat-input-group">
+
+        @if (!IsRecording)
+        {
+            <button title="send" type="button" @onclick="OnRecordClicked" class="chat-input-button" disabled="@IsBusy"> <i class="oi oi-microphone"></i></button>
+        }
+        
         <InputTextArea title="prompt" id="name" @bind-Value="SearchModel.SearchText" class="form-control chat-input shadow-none" />
+       
         <button title="send" type="submit" class="chat-input-button" disabled="@IsBusy"> <i class="oi oi-location"></i></button>
 
     </div>
@@ -18,6 +25,11 @@
     public bool IsBusy { get; set; }
 
     [Parameter]
+    public bool IsRecording { get; set; }
+
+    [Parameter]
     public EventCallback OnGenerateTextCompletionSubmitted { get; set; }
 
+    [Parameter]
+    public EventCallback OnRecordClicked { get; set; }
 }

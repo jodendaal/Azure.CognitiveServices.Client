@@ -30,6 +30,7 @@
     background-color: rgba(68,70,84,var(--tw-bg-opacity));
     border: none;
     color: white;
+    width:40px
 }
 
 .chat-input-button:hover {

@@ -1,4 +1,5 @@
 @page "/chat"
+@using Azure.CognitiveService.Client.BlazorApp.Interop;
 @using Azure.CognitiveServices.Client.OpenAI.Models;
 @using Azure.CognitiveService.Client
 @using Azure.CognitiveService.Client.BlazorApp.Models;
@@ -15,11 +16,12 @@
 
 <div class="chat-container">
 
-   
-
-    <ConversationContext SearchModel="@SelectedSearchModel" IsVisible="@SidePanelVisible" SearchModels="SearchModelExamples" SelectedSearchModelChanged="OnExampleChanged">
+    <ConversationContext 
+        SearchModel="@SelectedSearchModel"
+        IsVisible="@SidePanelVisible"
+        SearchModels="SearchModelExamples"
+        SelectedSearchModelChanged="OnExampleChanged">
     </ConversationContext>
-   
 
     <div class="chat">
        
@@ -31,20 +33,35 @@
             </CollapseButton>
             
        
-        <Conversation Results="@ConversationHistory"></Conversation>
+        <Conversation
+            Results="@ConversationHistory">
+        </Conversation>
 
         <div class="input-area">
-            <ErrorIndicator ErrorText="@ErrorText"></ErrorIndicator>
-            <LoadingIndicator StatusText="@StatusText"></LoadingIndicator>
+            <ErrorIndicator ErrorText="@ErrorText" />
+
+            <LoadingIndicator StatusText="@StatusText" />
+
+            <SpeechToTextDisplay 
+                IsRecording="@IsRecording" 
+                Text="@VoiceRecordingPartial" 
+                OnStopRecordingClicked="OnStopRecordingClicked" />
+            
 
             <ChatInput SearchModel="@SelectedSearchModel"
                 OnGenerateTextCompletionSubmitted="@OnTextCompletionSubmitted"
-                IsBusy="@IsBusy">
-            </ChatInput>
+                IsBusy="@IsBusy"
+                IsRecording="@IsRecording"
+                OnRecordClicked="OnRecordClicked" />
+            
         </div>
     </div>
 
-    <RequestOptions SearchModel="@SelectedSearchModel" IsVisible="@RightSidePanelVisible" OnViewCodeClicked="OnShowCodeClicked"></RequestOptions>
+    <RequestOptions 
+        SearchModel="@SelectedSearchModel" 
+        IsVisible="@RightSidePanelVisible"
+        OnViewCodeClicked="OnShowCodeClicked">
+    </RequestOptions>
 
 </div>
 
@@ -75,28 +92,41 @@
 </BSModal>
 
 @code {
-    BSModal refModal;
+    BSModal? refModal;
+    private bool IsRecording = false;
+    private string VoiceRecordingPartial = string.Empty;
     private AzureOpenAIConfig config => OpenAIConfig.Get("chat");
     private bool SidePanelVisible = true;
     private bool RightSidePanelVisible = true;
-    private string? ErrorText = "";
-    private string StatusText = "";
+    private string? ErrorText  = string.Empty;
+    private string StatusText = string.Empty;
     private bool IsBusy = false;
     private List<ChatInfo> ConversationHistory = new List<ChatInfo>();
     private ChatSearchModel SelectedSearchModel { get; set; } = new ChatSearchModel();
     private List<ChatSearchModel> SearchModelExamples = new List<ChatSearchModel>();
+    private SpeechToText SpeechToTextHelper;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         LoadExamples();
         SelectedSearchModel = SearchModelExamples!.First();
-        return base.OnInitializedAsync();
+
+        await base.OnInitializedAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await InitialiseVoiceToText();
+        }
+        await base.OnAfterRenderAsync(firstRender);
     }
 
 
     private async Task SendChatCompletionRequest()
     {
-      
+
 
         this.setIsProcessing(true);
 
@@ -230,14 +260,14 @@
 
     }
 
-      private void OnCloseCodeClicked()
+    private void OnCloseCodeClicked()
     {
-        refModal.HideAsync();
+        refModal?.HideAsync();
     }
 
     private void OnShowCodeClicked()
     {
-        refModal.ShowAsync();
+        refModal?.ShowAsync();
     }
 
     private void OnHideSidePanelClicked()
@@ -253,5 +283,46 @@
     private async Task OnTextCompletionSubmitted()
     {
         await SendChatCompletionRequest();
+    }
+
+
+    private async Task OnStopRecordingClicked()
+    {
+        this.VoiceRecordingPartial = string.Empty;
+        this.IsRecording = false;
+        await SpeechToTextHelper.Stop();
+    }
+
+    private async Task OnRecordClicked()
+    {
+        this.IsRecording = true;
+        await SpeechToTextHelper.Start();
+    }
+
+    private void OnVoiceTextReceived(string text)
+    {
+        if (!this.IsRecording)
+        {
+            SelectedSearchModel.SearchText = text;
+        }
+        else
+        {
+            VoiceRecordingPartial = text;
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task InitialiseVoiceToText()
+    {
+        if (SpeechToTextHelper == null)
+        {
+            SpeechToTextHelper = new SpeechToText(JS, (text) =>
+            {
+                OnVoiceTextReceived(text);
+            });
+
+            await SpeechToTextHelper.Initialise();
+        }
     }
 }
