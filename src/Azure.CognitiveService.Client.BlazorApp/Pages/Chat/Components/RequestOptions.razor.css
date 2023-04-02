@@ -38,7 +38,9 @@
     background-color: rgba(68,70,84,var(--tw-bg-opacity));
     border: none;
     resize: none;
-    outline:none!important;
+    outline: none !important;
+    height: 24px;
+    margin-top: 5px;
 }
 
 .stop-list-item {
