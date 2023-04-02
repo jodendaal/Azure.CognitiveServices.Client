@@ -173,11 +173,6 @@
 
     }
 
-    void OnAudioTextUpdated(string text)
-    {
-        this.SelectedSearchModel.SearchText = text;
-    }
-
     private void setIsProcessing(bool value, string statusMessage = "Generating")
     {
         if (value)
@@ -189,18 +184,23 @@
         this.StateHasChanged();
     }
 
-    void OnExampleChanged(string name)
+    private void LoadExamples()
+    {
+        var path = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "ExampleChats.json");
+        var json = File.ReadAllText(path);
+        this.SearchModelExamples = JsonSerializer.Deserialize<List<ChatSearchModel>>(json) ?? new List<ChatSearchModel>();
+    }
+
+     void OnExampleChanged(string name)
     {
         LoadExamples();
         this.ConversationHistory.Clear();
         this.SelectedSearchModel = this.SearchModelExamples.First(i => i.Name == name);
     }
 
-    private void LoadExamples()
+    void OnAudioTextUpdated(string text)
     {
-        var path = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "ExampleChats.json");
-        var json = File.ReadAllText(path);
-        this.SearchModelExamples = JsonSerializer.Deserialize<List<ChatSearchModel>>(json) ?? new List<ChatSearchModel>();
+        this.SelectedSearchModel.SearchText = text;
     }
 
     private void OnShowCodeClicked()
