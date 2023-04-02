@@ -8,14 +8,12 @@ namespace Azure.CognitiveService.Client.BlazorApp.Interop
         private readonly IJSRuntime _jSRuntime;
         private IJSObjectReference _module;
         private IJSObjectReference _speechToText;
-        private bool _isRecording = false;
-        private Action<string> _onTextReceievdAction;
+        private Action<string> _onTextReceivedAction;
         DotNetObjectReference<SpeechToText> _dotNetObjectReference { get; set; 
         }
-        public SpeechToText(IJSRuntime jSRuntime, Action<string> onTextReceievdAction)
+        public SpeechToText(IJSRuntime jSRuntime)
         {
             _jSRuntime = jSRuntime;
-            _onTextReceievdAction = onTextReceievdAction;
             _dotNetObjectReference = DotNetObjectReference.Create(this);
         }
 
@@ -25,24 +23,23 @@ namespace Azure.CognitiveService.Client.BlazorApp.Interop
             _speechToText = await _module.InvokeAsync<IJSObjectReference>("createSpeechToText");
         }
 
-        public async Task Start()
+        public async Task Start(Action<string> onTextReceivedAction)
         {
-            _isRecording = true;
+            _onTextReceivedAction = onTextReceivedAction;
             await _speechToText.InvokeAsync<object>("startProxy", _dotNetObjectReference, nameof(OnTextReceived));
         }
 
         public async Task Stop()
         {
-            _isRecording = false;
             await _speechToText.InvokeVoidAsync("stop");
         }
 
         [JSInvokable]
         public void OnTextReceived(string text)
         {
-            if(_onTextReceievdAction != null)
+            if(_onTextReceivedAction != null)
             {
-                _onTextReceievdAction(text);
+                _onTextReceivedAction(text);
             }
         }
 

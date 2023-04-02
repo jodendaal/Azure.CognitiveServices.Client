@@ -12,7 +12,7 @@
 @using System.Text.Json;
 @inject IChatCompletionService ChatCompletionSerice
 @inject IOptionsSnapshot<AzureOpenAIConfig> OpenAIConfig;
-@inject IJSRuntime JS
+@inject IJSRuntime JSRuntime
 
 <div class="chat-container">
 
@@ -297,7 +297,10 @@
     private async Task OnRecordClicked()
     {
         this.IsRecording = true;
-        await SpeechToTextHelper.Start();
+        await SpeechToTextHelper.Start((text) =>
+            {
+                OnVoiceTextReceived(text);
+            });
     }
 
     private void OnVoiceTextReceived(string text)
@@ -318,11 +321,7 @@
     {
         if (SpeechToTextHelper == null)
         {
-            SpeechToTextHelper = new SpeechToText(JS, (text) =>
-            {
-                OnVoiceTextReceived(text);
-            });
-
+            SpeechToTextHelper = new SpeechToText(JSRuntime);
             await SpeechToTextHelper.Initialise();
         }
     }
