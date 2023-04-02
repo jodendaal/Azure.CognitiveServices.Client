@@ -1,5 +1,6 @@
 ﻿.chat-input-group {
-    height: 50px;
+    height: auto;
+    max-height:250px;
 }
 
 .chat-input, ::deep .chat-input {
@@ -12,6 +13,7 @@
     border-bottom-color: rgba(32, 33, 35, 0.5);
     border-left-color: rgba(32, 33, 35, 0.5);
     outline: none !important;
+    resize: vertical;
 }
 
 .chat-input:focus, ::deep .chat-input:focus {
@@ -30,6 +32,7 @@
     background-color: rgba(68,70,84,var(--tw-bg-opacity));
     border: none;
     color: white;
+    width:40px
 }
 
 .chat-input-button:hover {

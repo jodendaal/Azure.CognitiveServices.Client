@@ -1,7 +1,4 @@
-﻿@using BlazorApp.Models;
-@using BlazorStrap;
-
-@if (IsVisible)
+﻿@if (IsVisible)
 {
     <div class="converation-context">
 
@@ -43,6 +40,6 @@
 
         private async Task OnChange(string value)
         {
-            await SelectedSearchModelChanged.InvokeAsync(this.SearchModels.First(searchModel => searchModel.Id == value).Name);
+            await this.SelectedSearchModelChanged.InvokeAsync(this.SearchModels.First(searchModel => searchModel.Id == value).Name);
         }
 }

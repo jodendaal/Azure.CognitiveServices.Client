@@ -1,103 +1,99 @@
 @page "/chat"
-@using Azure.CognitiveServices.Client.OpenAI.Models;
-@using Azure.CognitiveService.Client
-@using Azure.CognitiveService.Client.BlazorApp.Models;
 @using Azure.CognitiveService.Client.BlazorApp.Pages.Chat.Components
-@using Azure.CognitiveServices.Client.OpenAI.Models.Requests;
-@using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
-@using Azure.CognitiveServices.Client.OpenAI.ExtensionMethods;
-@using BlazorStrap;
-@using Microsoft.Extensions.Options;
-@using System.Text.Json;
 @inject IChatCompletionService ChatCompletionSerice
 @inject IOptionsSnapshot<AzureOpenAIConfig> OpenAIConfig;
-@inject IJSRuntime JS
+@inject IJSRuntime JSRuntime
 
 <div class="chat-container">
 
-   
-
-    <ConversationContext SearchModel="@SelectedSearchModel" IsVisible="@SidePanelVisible" SearchModels="SearchModelExamples" SelectedSearchModelChanged="OnExampleChanged">
+    <ConversationContext 
+        SearchModel="@SelectedSearchModel"
+        IsVisible="@LeftSidePanelVisible"
+        SearchModels="SearchModelExamples"
+        SelectedSearchModelChanged="OnExampleChanged">
     </ConversationContext>
-   
 
     <div class="chat">
        
-            <CollapseButton
-                OnLeftButtonClicked="OnHideSidePanelClicked"
-                LeftIsOpen="@SidePanelVisible"
-                RightIsOpen="@RightSidePanelVisible"
-                OnRightButtonClicked="OnHideRightSidePanelClicked">
-            </CollapseButton>
+        <CollapseButton
+            OnLeftButtonClicked="OnHideLeftSidePanelClicked"
+            LeftIsOpen="@LeftSidePanelVisible"
+            RightIsOpen="@RightSidePanelVisible"
+            OnRightButtonClicked="OnHideRightSidePanelClicked">
+        </CollapseButton>
             
        
-        <Conversation Results="@ConversationHistory"></Conversation>
+        <Conversation
+            Results="@ConversationHistory">
+        </Conversation>
 
         <div class="input-area">
-            <ErrorIndicator ErrorText="@ErrorText"></ErrorIndicator>
-            <LoadingIndicator StatusText="@StatusText"></LoadingIndicator>
+            <ErrorIndicator ErrorText="@ErrorText" />
+
+            <LoadingIndicator StatusText="@StatusText" />
+
+            <SpeechToTextDisplay 
+                IsRecording="@IsRecording" 
+                Text="@VoiceRecordingPartial" 
+                OnStopRecordingClicked="OnStopRecordingClicked" />
+            
 
             <ChatInput SearchModel="@SelectedSearchModel"
                 OnGenerateTextCompletionSubmitted="@OnTextCompletionSubmitted"
-                IsBusy="@IsBusy">
-            </ChatInput>
+                IsBusy="@IsBusy"
+                IsRecording="@IsRecording"
+                OnRecordClicked="OnRecordClicked" />
+            
         </div>
     </div>
 
-    <RequestOptions SearchModel="@SelectedSearchModel" IsVisible="@RightSidePanelVisible" OnViewCodeClicked="OnShowCodeClicked"></RequestOptions>
+    <RequestOptions
+        SearchModel="@SelectedSearchModel" 
+        IsVisible="@RightSidePanelVisible"
+        OnViewCodeClicked="OnShowCodeClicked">
+    </RequestOptions>
 
 </div>
 
+<CodeExampleModal @ref="ViewCodeModalRef" 
+    ChatRequest="CreateRequest()">
+</CodeExampleModal>
 
-<BSModal IsCentered="true" Class="code-modal" @ref="refModal">
-   
-    <Header>Sample Code</Header>
-    <Content>
-        <div class="mb-3">
-          <label for="exampleFormControlInput1" class="form-label">Url</label>
-
-            <textarea class="form-control text-area" value="@CodeExampleUrl()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
-        </div>
-        <div class="mb-3">
-          <label for="exampleFormControlTextarea1" class="form-label">JSON Body</label>
-            <textarea class="form-control text-area" value=" @JsonRequest()" rows="15" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
-        </div>
-        <div class="mb-3">
-            <label for="exampleFormControlTextarea1" class="form-label">Headers</label>
-            <textarea class="form-control text-area" value="@CodeExampleHeaders()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-        </div>
-    </Content>
-      
-    <Footer Context="modal">
-        <button class="button" @onclick="OnCloseCodeClicked">Close</button>
-    </Footer>
-
-</BSModal>
 
 @code {
-    BSModal refModal;
+    CodeExampleModal? ViewCodeModalRef;
+    private bool IsRecording = false;
+    private string VoiceRecordingPartial = string.Empty;
     private AzureOpenAIConfig config => OpenAIConfig.Get("chat");
-    private bool SidePanelVisible = true;
+    private bool LeftSidePanelVisible = true;
     private bool RightSidePanelVisible = true;
-    private string? ErrorText = "";
-    private string StatusText = "";
+    private string? ErrorText  = string.Empty;
+    private string StatusText = string.Empty;
     private bool IsBusy = false;
     private List<ChatInfo> ConversationHistory = new List<ChatInfo>();
     private ChatSearchModel SelectedSearchModel { get; set; } = new ChatSearchModel();
     private List<ChatSearchModel> SearchModelExamples = new List<ChatSearchModel>();
+    private SpeechToText SpeechToTextHelper;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        LoadExamples();
-        SelectedSearchModel = SearchModelExamples!.First();
-        return base.OnInitializedAsync();
+        this.LoadExamples();
+        this.SelectedSearchModel = this.SearchModelExamples!.First();
+
+        await base.OnInitializedAsync();
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await this.InitialiseVoiceToText();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
 
     private async Task SendChatCompletionRequest()
     {
-      
-
         this.setIsProcessing(true);
 
         this.ConversationHistory.Add(new ChatInfo() { User = "User", Message = this.SelectedSearchModel.SearchText });
@@ -106,40 +102,19 @@
         try
         {
             var request = CreateRequest();
-            SelectedSearchModel.SearchText = string.Empty;
+            this.SelectedSearchModel.SearchText = string.Empty;
             await foreach (var result in ChatCompletionSerice.CreateStream(request, config))
             {
                 this.ConversationHistory[ConversationHistory.Count - 1].Message += result.Value!.Choices[0].Delta.Content;
-                StateHasChanged();
+                this.StateHasChanged();
             }
         }
         catch (Exception ex)
         {
-            ErrorText = $"An error occured : {ex.Message}";
+            this.ErrorText = $"An error occured : {ex.Message}";
         }
 
         this.setIsProcessing(false);
-    }
-
-    private string CodeExampleHeaders()
-    {
-        return $"Content-Type : application/json\r\napi-key : YOUR_API_KEY";
-    }
-
-    private string CodeExampleUrl()
-    {
-        return $"{config.ApiUrl}/openai/deployments/{config.DeploymentName}/chat/completions?api-version={config.ApiVersion}";
-    }
-    private string JsonRequest()
-    {
-        var request = CreateRequest();
-        var json = JsonSerializer.Serialize(request,new JsonSerializerOptions()
-        {
-            WriteIndented = true,
-            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        });
-        return json;
     }
 
     private ChatCompletionRequest CreateRequest()
@@ -198,11 +173,6 @@
 
     }
 
-    void OnAudioTextUpdated(string text)
-    {
-        this.SelectedSearchModel.SearchText = text;
-    }
-
     private void setIsProcessing(bool value, string statusMessage = "Generating")
     {
         if (value)
@@ -214,35 +184,33 @@
         this.StateHasChanged();
     }
 
-    void OnExampleChanged(string name)
-    {
-        LoadExamples();
-        this.ConversationHistory.Clear();
-        SelectedSearchModel = SearchModelExamples.First(i => i.Name == name);
-    }
-
-
     private void LoadExamples()
     {
         var path = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "ExampleChats.json");
         var json = File.ReadAllText(path);
-        SearchModelExamples = JsonSerializer.Deserialize<List<ChatSearchModel>>(json) ?? new List<ChatSearchModel>();
-
+        this.SearchModelExamples = JsonSerializer.Deserialize<List<ChatSearchModel>>(json) ?? new List<ChatSearchModel>();
     }
 
-      private void OnCloseCodeClicked()
+     void OnExampleChanged(string name)
     {
-        refModal.HideAsync();
+        LoadExamples();
+        this.ConversationHistory.Clear();
+        this.SelectedSearchModel = this.SearchModelExamples.First(i => i.Name == name);
+    }
+
+    void OnAudioTextUpdated(string text)
+    {
+        this.SelectedSearchModel.SearchText = text;
     }
 
     private void OnShowCodeClicked()
     {
-        refModal.ShowAsync();
+        this.ViewCodeModalRef?.ShowAsync();
     }
 
-    private void OnHideSidePanelClicked()
+    private void OnHideLeftSidePanelClicked()
     {
-        this.SidePanelVisible = !this.SidePanelVisible;
+        this.LeftSidePanelVisible = !this.LeftSidePanelVisible;
     }
 
     private void OnHideRightSidePanelClicked()
@@ -252,6 +220,45 @@
 
     private async Task OnTextCompletionSubmitted()
     {
-        await SendChatCompletionRequest();
+        await this.SendChatCompletionRequest();
+    }
+
+    private async Task OnStopRecordingClicked()
+    {
+        this.VoiceRecordingPartial = string.Empty;
+        this.IsRecording = false;
+        await this.SpeechToTextHelper.Stop();
+    }
+
+    private async Task OnRecordClicked()
+    {
+        this.IsRecording = true;
+        await this.SpeechToTextHelper.Start((text) =>
+            {
+                this.OnVoiceTextReceived(text);
+            });
+    }
+
+    private void OnVoiceTextReceived(string text)
+    {
+        if (!this.IsRecording)
+        {
+            this.SelectedSearchModel.SearchText = text;
+        }
+        else
+        {
+            this.VoiceRecordingPartial = text;
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task InitialiseVoiceToText()
+    {
+        if (this.SpeechToTextHelper == null)
+        {
+            this.SpeechToTextHelper = new SpeechToText(JSRuntime);
+            await this.SpeechToTextHelper.Initialise();
+        }
     }
 }
