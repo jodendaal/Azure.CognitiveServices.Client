@@ -47,7 +47,7 @@
         </div>
     </div>
 
-    <RequestOptions 
+    <RequestOptions
         SearchModel="@SelectedSearchModel" 
         IsVisible="@RightSidePanelVisible"
         OnViewCodeClicked="OnShowCodeClicked">
@@ -55,34 +55,13 @@
 
 </div>
 
+<CodeExampleModal @ref="ViewCodeModalRef" 
+    ChatRequest="CreateRequest()">
+</CodeExampleModal>
 
-<BSModal IsCentered="true" Class="code-modal" @ref="ViewCodeModalRef">
-   
-    <Header>Sample Code</Header>
-    <Content>
-        <div class="mb-3">
-          <label for="exampleFormControlInput1" class="form-label">Url</label>
-
-            <textarea class="form-control text-area" value="@CodeExampleUrl()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
-        </div>
-        <div class="mb-3">
-          <label for="exampleFormControlTextarea1" class="form-label">JSON Body</label>
-            <textarea class="form-control text-area" value=" @JsonRequest()" rows="15" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
-        </div>
-        <div class="mb-3">
-            <label for="exampleFormControlTextarea1" class="form-label">Headers</label>
-            <textarea class="form-control text-area" value="@CodeExampleHeaders()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-        </div>
-    </Content>
-      
-    <Footer Context="modal">
-        <button class="button" @onclick="OnCloseCodeClicked">Close</button>
-    </Footer>
-
-</BSModal>
 
 @code {
-    BSModal? ViewCodeModalRef;
+    CodeExampleModal? ViewCodeModalRef;
     private bool IsRecording = false;
     private string VoiceRecordingPartial = string.Empty;
     private AzureOpenAIConfig config => OpenAIConfig.Get("chat");
@@ -136,28 +115,6 @@
         }
 
         this.setIsProcessing(false);
-    }
-
-    private string CodeExampleHeaders()
-    {
-        return $"Content-Type : application/json\r\napi-key : YOUR_API_KEY";
-    }
-
-    private string CodeExampleUrl()
-    {
-        return $"{config.ApiUrl}/openai/deployments/{config.DeploymentName}/chat/completions?api-version={config.ApiVersion}";
-    }
-
-    private string JsonRequest()
-    {
-        var request = CreateRequest();
-        var json = JsonSerializer.Serialize(request,new JsonSerializerOptions()
-        {
-            WriteIndented = true,
-            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        });
-        return json;
     }
 
     private ChatCompletionRequest CreateRequest()
@@ -239,17 +196,11 @@
         this.SelectedSearchModel = this.SearchModelExamples.First(i => i.Name == name);
     }
 
-
     private void LoadExamples()
     {
         var path = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "ExampleChats.json");
         var json = File.ReadAllText(path);
         this.SearchModelExamples = JsonSerializer.Deserialize<List<ChatSearchModel>>(json) ?? new List<ChatSearchModel>();
-    }
-
-    private void OnCloseCodeClicked()
-    {
-        this.ViewCodeModalRef?.HideAsync();
     }
 
     private void OnShowCodeClicked()
@@ -271,7 +222,6 @@
     {
         await this.SendChatCompletionRequest();
     }
-
 
     private async Task OnStopRecordingClicked()
     {
