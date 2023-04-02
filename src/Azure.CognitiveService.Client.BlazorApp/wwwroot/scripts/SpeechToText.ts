@@ -1,4 +1,4 @@
-class SpeechRecognition {
+class SpeechToText {
 
     private onTextReceived: ((data: string) => void) | null = null;
     recognition = new window.webkitSpeechRecognition();
@@ -50,8 +50,6 @@ class SpeechRecognition {
     }
 }
 
-export default SpeechRecognition;
-
 declare global {
     interface Window {
         webkitSpeechRecognition: any;
@@ -59,6 +57,6 @@ declare global {
 }
 
 
-export function createSpeechRecognition(): SpeechRecognition {
-    return new SpeechRecognition();
+export function createSpeechToText(): SpeechToText {
+    return new SpeechToText();
 }

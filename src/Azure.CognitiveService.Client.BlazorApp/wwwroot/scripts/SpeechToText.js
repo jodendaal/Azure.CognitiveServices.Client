@@ -1,4 +1,4 @@
-class SpeechRecognition {
+class SpeechToText {
     constructor() {
         this.onTextReceived = null;
         this.recognition = new window.webkitSpeechRecognition();
@@ -40,7 +40,6 @@ class SpeechRecognition {
         }
     }
 }
-export default SpeechRecognition;
-export function createSpeechRecognition() {
-    return new SpeechRecognition();
+export function createSpeechToText() {
+    return new SpeechToText();
 }

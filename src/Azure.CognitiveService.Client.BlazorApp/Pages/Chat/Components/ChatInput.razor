@@ -6,7 +6,7 @@
 
         @if (!IsRecording)
         {
-            <button title="send" type="button" @onclick="OnRecordClicked" class="chat-input-button" disabled="@IsBusy"> <i class="oi oi-microphone"></i></button>
+            <button title="record voice" type="button" @onclick="OnRecordClicked" class="chat-input-button" disabled="@IsBusy"> <i class="oi oi-microphone"></i></button>
         }
         
         <InputTextArea title="prompt" id="name" @bind-Value="SearchModel.SearchText" class="form-control chat-input shadow-none" />
