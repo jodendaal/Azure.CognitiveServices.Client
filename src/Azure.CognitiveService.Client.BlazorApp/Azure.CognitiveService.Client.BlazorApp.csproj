@@ -31,8 +31,4 @@
     <ProjectReference Include="..\Azure.CognitiveServices.Client\Azure.CognitiveServices.Client\Azure.CognitiveServices.Client.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\scripts\" />
-  </ItemGroup>
-
 </Project>
