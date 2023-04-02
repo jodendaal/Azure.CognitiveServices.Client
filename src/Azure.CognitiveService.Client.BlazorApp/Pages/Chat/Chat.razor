@@ -18,7 +18,7 @@
 
     <ConversationContext 
         SearchModel="@SelectedSearchModel"
-        IsVisible="@SidePanelVisible"
+        IsVisible="@LeftSidePanelVisible"
         SearchModels="SearchModelExamples"
         SelectedSearchModelChanged="OnExampleChanged">
     </ConversationContext>
@@ -26,8 +26,8 @@
     <div class="chat">
        
             <CollapseButton
-                OnLeftButtonClicked="OnHideSidePanelClicked"
-                LeftIsOpen="@SidePanelVisible"
+                OnLeftButtonClicked="OnHideLeftSidePanelClicked"
+                LeftIsOpen="@LeftSidePanelVisible"
                 RightIsOpen="@RightSidePanelVisible"
                 OnRightButtonClicked="OnHideRightSidePanelClicked">
             </CollapseButton>
@@ -273,7 +273,7 @@
 
     private void OnHideLeftSidePanelClicked()
     {
-        this.SidePanelVisible = !this.SidePanelVisible;
+        this.LeftSidePanelVisible = !this.LeftSidePanelVisible;
     }
 
     private void OnHideRightSidePanelClicked()
