@@ -96,7 +96,7 @@
     private bool IsRecording = false;
     private string VoiceRecordingPartial = string.Empty;
     private AzureOpenAIConfig config => OpenAIConfig.Get("chat");
-    private bool SidePanelVisible = true;
+    private bool LeftSidePanelVisible = true;
     private bool RightSidePanelVisible = true;
     private string? ErrorText  = string.Empty;
     private string StatusText = string.Empty;
@@ -160,6 +160,7 @@
     {
         return $"{config.ApiUrl}/openai/deployments/{config.DeploymentName}/chat/completions?api-version={config.ApiVersion}";
     }
+
     private string JsonRequest()
     {
         var request = CreateRequest();
@@ -270,7 +271,7 @@
         refModal?.ShowAsync();
     }
 
-    private void OnHideSidePanelClicked()
+    private void OnHideLeftSidePanelClicked()
     {
         this.SidePanelVisible = !this.SidePanelVisible;
     }
