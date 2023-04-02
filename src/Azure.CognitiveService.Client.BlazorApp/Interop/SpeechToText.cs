@@ -20,7 +20,7 @@ namespace Azure.CognitiveService.Client.BlazorApp.Interop
         public async Task Initialise()
         {
             _module = await _jSRuntime!.InvokeAsync<IJSObjectReference>("import", _modulePath);
-            _speechToText = await _module.InvokeAsync<IJSObjectReference>("createSpeechRecognition");
+            _speechToText = await _module.InvokeAsync<IJSObjectReference>("createSpeechToText");
         }
 
         public async Task Start()
