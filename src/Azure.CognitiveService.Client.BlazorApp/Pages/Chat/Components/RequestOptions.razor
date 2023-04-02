@@ -139,19 +139,19 @@
 
     private void OnGenerateTextCompletionSubmitted()
     {
-        if (SearchModel.ChatCompletionRequest.Stop == null)
+        if (this.SearchModel.ChatCompletionRequest.Stop == null)
         {
-            SearchModel.ChatCompletionRequest.Stop = new List<string>();
+            this.SearchModel.ChatCompletionRequest.Stop = new List<string>();
         }
 
-        SearchModel.ChatCompletionRequest.Stop.Add(Stop);
-        Stop = "";
+        this.SearchModel.ChatCompletionRequest.Stop.Add(this.Stop);
+        this.Stop = "";
 
     }
 
     private void RemoveItem(int index)
     {
-        SearchModel.ChatCompletionRequest.Stop?.RemoveAt(index);
+        this.SearchModel.ChatCompletionRequest.Stop?.RemoveAt(index);
     }
 
     private string Stop { get; set; }

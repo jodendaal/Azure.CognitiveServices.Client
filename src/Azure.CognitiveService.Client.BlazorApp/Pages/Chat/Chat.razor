@@ -1,15 +1,5 @@
 @page "/chat"
-@using Azure.CognitiveService.Client.BlazorApp.Interop;
-@using Azure.CognitiveServices.Client.OpenAI.Models;
-@using Azure.CognitiveService.Client
-@using Azure.CognitiveService.Client.BlazorApp.Models;
 @using Azure.CognitiveService.Client.BlazorApp.Pages.Chat.Components
-@using Azure.CognitiveServices.Client.OpenAI.Models.Requests;
-@using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
-@using Azure.CognitiveServices.Client.OpenAI.ExtensionMethods;
-@using BlazorStrap;
-@using Microsoft.Extensions.Options;
-@using System.Text.Json;
 @inject IChatCompletionService ChatCompletionSerice
 @inject IOptionsSnapshot<AzureOpenAIConfig> OpenAIConfig;
 @inject IJSRuntime JSRuntime
@@ -66,7 +56,7 @@
 </div>
 
 
-<BSModal IsCentered="true" Class="code-modal" @ref="refModal">
+<BSModal IsCentered="true" Class="code-modal" @ref="ViewCodeModalRef">
    
     <Header>Sample Code</Header>
     <Content>
@@ -92,7 +82,7 @@
 </BSModal>
 
 @code {
-    BSModal? refModal;
+    BSModal? ViewCodeModalRef;
     private bool IsRecording = false;
     private string VoiceRecordingPartial = string.Empty;
     private AzureOpenAIConfig config => OpenAIConfig.Get("chat");
@@ -108,8 +98,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        LoadExamples();
-        SelectedSearchModel = SearchModelExamples!.First();
+        this.LoadExamples();
+        this.SelectedSearchModel = this.SearchModelExamples!.First();
 
         await base.OnInitializedAsync();
     }
@@ -118,16 +108,13 @@
     {
         if (firstRender)
         {
-            await InitialiseVoiceToText();
+            await this.InitialiseVoiceToText();
         }
         await base.OnAfterRenderAsync(firstRender);
     }
 
-
     private async Task SendChatCompletionRequest()
     {
-
-
         this.setIsProcessing(true);
 
         this.ConversationHistory.Add(new ChatInfo() { User = "User", Message = this.SelectedSearchModel.SearchText });
@@ -136,16 +123,16 @@
         try
         {
             var request = CreateRequest();
-            SelectedSearchModel.SearchText = string.Empty;
+            this.SelectedSearchModel.SearchText = string.Empty;
             await foreach (var result in ChatCompletionSerice.CreateStream(request, config))
             {
                 this.ConversationHistory[ConversationHistory.Count - 1].Message += result.Value!.Choices[0].Delta.Content;
-                StateHasChanged();
+                this.StateHasChanged();
             }
         }
         catch (Exception ex)
         {
-            ErrorText = $"An error occured : {ex.Message}";
+            this.ErrorText = $"An error occured : {ex.Message}";
         }
 
         this.setIsProcessing(false);
@@ -249,7 +236,7 @@
     {
         LoadExamples();
         this.ConversationHistory.Clear();
-        SelectedSearchModel = SearchModelExamples.First(i => i.Name == name);
+        this.SelectedSearchModel = this.SearchModelExamples.First(i => i.Name == name);
     }
 
 
@@ -257,18 +244,17 @@
     {
         var path = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "ExampleChats.json");
         var json = File.ReadAllText(path);
-        SearchModelExamples = JsonSerializer.Deserialize<List<ChatSearchModel>>(json) ?? new List<ChatSearchModel>();
-
+        this.SearchModelExamples = JsonSerializer.Deserialize<List<ChatSearchModel>>(json) ?? new List<ChatSearchModel>();
     }
 
     private void OnCloseCodeClicked()
     {
-        refModal?.HideAsync();
+        this.ViewCodeModalRef?.HideAsync();
     }
 
     private void OnShowCodeClicked()
     {
-        refModal?.ShowAsync();
+        this.ViewCodeModalRef?.ShowAsync();
     }
 
     private void OnHideLeftSidePanelClicked()
@@ -283,7 +269,7 @@
 
     private async Task OnTextCompletionSubmitted()
     {
-        await SendChatCompletionRequest();
+        await this.SendChatCompletionRequest();
     }
 
 
@@ -291,15 +277,15 @@
     {
         this.VoiceRecordingPartial = string.Empty;
         this.IsRecording = false;
-        await SpeechToTextHelper.Stop();
+        await this.SpeechToTextHelper.Stop();
     }
 
     private async Task OnRecordClicked()
     {
         this.IsRecording = true;
-        await SpeechToTextHelper.Start((text) =>
+        await this.SpeechToTextHelper.Start((text) =>
             {
-                OnVoiceTextReceived(text);
+                this.OnVoiceTextReceived(text);
             });
     }
 
@@ -307,11 +293,11 @@
     {
         if (!this.IsRecording)
         {
-            SelectedSearchModel.SearchText = text;
+            this.SelectedSearchModel.SearchText = text;
         }
         else
         {
-            VoiceRecordingPartial = text;
+            this.VoiceRecordingPartial = text;
         }
 
         StateHasChanged();
@@ -319,10 +305,10 @@
 
     private async Task InitialiseVoiceToText()
     {
-        if (SpeechToTextHelper == null)
+        if (this.SpeechToTextHelper == null)
         {
-            SpeechToTextHelper = new SpeechToText(JSRuntime);
-            await SpeechToTextHelper.Initialise();
+            this.SpeechToTextHelper = new SpeechToText(JSRuntime);
+            await this.SpeechToTextHelper.Initialise();
         }
     }
 }

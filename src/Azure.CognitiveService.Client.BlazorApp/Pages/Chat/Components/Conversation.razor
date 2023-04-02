@@ -1,7 +1,6 @@
-﻿@using BlazorApp.Models;
-@using ColorCode.Styling;
+﻿@using ColorCode.Styling;
 @using Markdig;
-@inject IJSRuntime JS
+@inject IJSRuntime JSRuntime
 
 <div class="conversation-area" @ref=ChatAreaRef>
 
@@ -34,13 +33,13 @@
 
     private void ScrollToEnd()
     {
-        JS.InvokeVoidAsync("ChatGPTMethods.scrollToEnd", new object[] { ChatAreaRef });
+        JSRuntime.InvokeVoidAsync("ChatGPTMethods.scrollToEnd", new object[] { ChatAreaRef });
     }
 
 
     protected override Task OnAfterRenderAsync(bool firstRender)
     {
-        ScrollToEnd();
+        this.ScrollToEnd();
         return base.OnAfterRenderAsync(firstRender);
     }
 }
