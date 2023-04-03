@@ -1,0 +1,69 @@
+﻿@using Azure.CognitiveServices.Client.OpenAI.Models;
+@using Microsoft.Extensions.Options;
+
+@inject IOptionsSnapshot<AzureOpenAIConfig> OpenAIConfig;
+
+<BSModal IsCentered="true" Class="code-modal" @ref="ViewCodeModalRef">
+
+    <Header>Sample Code</Header>
+    <Content>
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Url</label>
+
+            <textarea class="form-control text-area" value="@CodeExampleUrl()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">JSON Body</label>
+            <textarea class="form-control text-area" value=" @JsonRequest()" rows="15" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Headers</label>
+            <textarea class="form-control text-area" value="@CodeExampleHeaders()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+        </div>
+    </Content>
+
+    <Footer Context="modal">
+        <button class="btn button" @onclick="OnCloseCodeClicked">Close</button>
+    </Footer>
+
+</BSModal>
+
+@code {
+
+    [Parameter]
+    public ChatCompletionRequest ChatRequest { get; set; }
+
+    private BSModal? ViewCodeModalRef { get; set; }
+    private AzureOpenAIConfig config => OpenAIConfig.Get("chat");
+
+    public void ShowAsync()
+    {
+        this.ViewCodeModalRef?.ShowAsync();
+    }
+
+    private void OnCloseCodeClicked()
+    {
+        this.ViewCodeModalRef?.HideAsync();
+    }
+
+    private string CodeExampleHeaders()
+    {
+        return $"Content-Type : application/json\r\napi-key : YOUR_API_KEY";
+    }
+
+    private string CodeExampleUrl()
+    {
+        return $"{config.ApiUrl}/openai/deployments/{config.DeploymentName}/chat/completions?api-version={config.ApiVersion}";
+    }
+
+    private string JsonRequest()
+    {
+        var json = JsonSerializer.Serialize(this.ChatRequest, new JsonSerializerOptions()
+            {
+                WriteIndented = true,
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+        return json;
+    }
+}

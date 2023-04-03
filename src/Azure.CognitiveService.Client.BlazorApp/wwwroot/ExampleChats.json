@@ -7,9 +7,9 @@
   },
   {
     "Name": "Extract Personal Details",
-    "SearchText": "extract the person details from this\r\nPaul Newman 1985 london uk",
+    "SearchText": "extract the person details",
     "System": "respond only with machine readable JSON format",
-    "Assistant": ""
+    "Assistant": "Paul Newman 1985 london uk"
   },
   {
     "Name": "Quiz Generator",
@@ -46,6 +46,18 @@
     "SearchText": "How much is a PS5?",
     "System": "You are an Xbox customer support agent whose primary goal is to help users with issues they are experiencing with their Xbox devices. You are friendly and concise. You only provide factual answers to queries, and do not provide answers that are not related to Xbox.",
     "Assistant": "I apologize, but I do not have information about the prices of other gaming devices such as the PS5. My primary focus is to assist with issues regarding Xbox devices. Is there a specific issue you are having with your Xbox device that I may be able to help with?"
+  },
+  {
+    "Name": "Summarization",
+    "SearchText": "Augusta Ada King, Countess of Lovelace (n\u00E9e Byron; 10 December 1815 \u2013 27 November 1852) was an English mathematician and writer, chiefly known for her work on Charles Babbage's proposed mechanical general-purpose computer, the Analytical Engine. She was the first to recognise that the machine had applications beyond pure calculation, and to have published the first algorithm intended to be carried out by such a machine. As a result, she is often regarded as the first computer programmer.[2][3][4]\r\n\r\nAda Byron was the only legitimate child of poet Lord Byron and Lady Byron.[5] All of Byron's other children were born out of wedlock to other women.[6] Byron separated from his wife a month after Ada was born and left England forever. Four months later, he commemorated the parting in a poem that begins, \"Is thy face like thy mother's my fair child! ADA! sole daughter of my house and heart?\"[7] He died in Greece when Ada was eight. Her mother remained bitter and promoted Ada's interest in mathematics and logic in an effort to prevent her from developing her father's perceived insanity. Despite this, Ada remained interested in him, naming her two sons Byron and Gordon. Upon her death, she was buried next to him at her request. Although often ill in her childhood, Ada pursued her studies assiduously. She married William King in 1835. King was made Earl of Lovelace in 1838, Ada thereby becoming Countess of Lovelace.\r\n\r\nHer educational and social exploits brought her into contact with scientists such as Andrew Crosse, Charles Babbage, Sir David Brewster, Charles Wheatstone, Michael Faraday, and the author Charles Dickens, contacts which she used to further her education. Ada described her approach as \"poetical science\"[8] and herself as an \"Analyst (& Metaphysician)\".[9]\r\n\r\nWhen she was eighteen, her mathematical talents led her to a long working relationship and friendship with fellow British mathematician Charles Babbage, who is known as \"the father of computers\". She was in particular interested in Babbage's work on the Analytical Engine. Lovelace first met him in June 1833, through their mutual friend, and her private tutor, Mary Somerville.\r\n\r\nBetween 1842 and 1843, Ada translated an article by Italian military engineer Luigi Menabrea about the Analytical Engine, supplementing it with an elaborate set of notes, simply called \"Notes\". Lovelace's notes are important in the early history of computers, containing what many consider to be the first computer program\u2014that is, an algorithm designed to be carried out by a machine. Other historians reject this perspective and point out that Babbage's personal notes from the years 1836\/1837 contain the first programs for the engine.[10] She also developed a vision of the capability of computers to go beyond mere calculating or number-crunching, while many others, including Babbage himself, focused only on those capabilities.[11] Her mindset of \"poetical science\" led her to ask questions about the Analytical Engine (as shown in her notes) examining how individuals and society relate to technology as a collaborative tool.[6]",
+    "System": "Summarize and text you receive into 300 words or less",
+    "Assistant": ""
+  },
+  {
+    "Name": "Question Answer",
+    "SearchText": "1. How old is Peter now?\r\n 2. Why could he not get up in the morning?\r\n 3. Where was he walking?\r\n 4. What is Peter's surname?\r\n 5. What is peter's occupation?",
+    "System": "Answer questions provided as simply as possible with an explanation.",
+    "Assistant": "The current year is 2023. Peter Jones was walking on the moon in 1993 and he was 23 years old.\r\n He tripped and fell and bumped his head and could not get up in the morning.\r\nHe worked as an Astronaut."
   }
 
 ]

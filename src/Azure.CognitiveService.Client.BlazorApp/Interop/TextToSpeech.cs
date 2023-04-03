@@ -20,9 +20,18 @@ namespace Azure.CognitiveService.Client.BlazorApp.Interop
             _textToSpeech = await _module.InvokeAsync<IJSObjectReference>("createTextToSpeech");
         }
 
-        public async Task Speak(string text,int selectedVoiceIndex,CancellationToken canellationToken)
+        public async Task Speak(string text,string voiceUri, CancellationToken canellationToken)
         {
-            await _textToSpeech.InvokeAsync<object>("speak", canellationToken, text,selectedVoiceIndex);
+            try
+            {
+                await _textToSpeech.InvokeAsync<object>("speak", canellationToken, text, voiceUri);
+            }
+            catch(TaskCanceledException) { }
+        }
+
+        public async Task Cancel()
+        {
+            await _textToSpeech.InvokeVoidAsync("cancel");
         }
 
         public async Task<List<Voice>> GetVoices()
@@ -46,8 +55,9 @@ namespace Azure.CognitiveService.Client.BlazorApp.Interop
 
         public class Voice
         {
-            public string name { get; set; }
-            public string lang { get; set; }
+            public string Name { get; set; }
+            public string Lang { get; set; }
+            public string VoiceURI { get; set; }
         }
     }
 }

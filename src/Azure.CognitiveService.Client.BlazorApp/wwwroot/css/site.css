@@ -126,3 +126,31 @@ a, .btn-link {
     border: none;
     color: white;
 }
+
+.voice-enabled {
+    --tw-text-opacity: 1;
+    color: rgba(172,172,190,var(--tw-text-opacity));
+    --tw-bg-opacity: 1;
+    background-color: rgba(32,33,35,var(--tw-bg-opacity));
+    border:none;
+
+}
+
+
+.voice-enabled::after {
+    content: none;
+    display:none;
+}
+
+.voice-disabled::after {
+    content: none;
+    display: none;
+}
+
+.voice-disabled {
+    --tw-bg-opacity: 0.5;
+    background-color: rgba(68,70,84,var(--tw-bg-opacity));
+    border: none;
+    color: white;
+    width: 40px
+}

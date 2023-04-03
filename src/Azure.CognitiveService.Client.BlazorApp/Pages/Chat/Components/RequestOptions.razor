@@ -122,7 +122,7 @@
             <BSInput InputType="InputType.Range" @bind-Value="@SearchModel.NumberOfPreviousMessageToInclude" min="0" max="20" step="1" />
 
 
-            <button type="button" @onclick="OnViewCodeClicked" class="chat-view-code-button mt-3"><i class="oi oi-code"></i> View Code</button>
+            <button type="button" @onclick="OnViewCodeClicked" class="btn chat-view-code-button mt-3"><i class="oi oi-code"></i> View Code</button>
         </EditForm>
     </div>
 }
@@ -139,19 +139,19 @@
 
     private void OnGenerateTextCompletionSubmitted()
     {
-        if (SearchModel.ChatCompletionRequest.Stop == null)
+        if (this.SearchModel.ChatCompletionRequest.Stop == null)
         {
-            SearchModel.ChatCompletionRequest.Stop = new List<string>();
+            this.SearchModel.ChatCompletionRequest.Stop = new List<string>();
         }
 
-        SearchModel.ChatCompletionRequest.Stop.Add(Stop);
-        Stop = "";
+        this.SearchModel.ChatCompletionRequest.Stop.Add(this.Stop);
+        this.Stop = "";
 
     }
 
     private void RemoveItem(int index)
     {
-        SearchModel.ChatCompletionRequest.Stop?.RemoveAt(index);
+        this.SearchModel.ChatCompletionRequest.Stop?.RemoveAt(index);
     }
 
     private string Stop { get; set; }

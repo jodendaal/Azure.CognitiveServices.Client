@@ -48,6 +48,12 @@ namespace Azure.CognitiveService.Client.BlazorApp
                 o.DeploymentName = e.Value.Chat.DeploymentName;
             });
 
+            builder.Services.AddSignalR(o =>
+            {
+                o.EnableDetailedErrors = true;
+                o.MaximumReceiveMessageSize = long.MaxValue;
+            });
+
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();

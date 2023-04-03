@@ -1,16 +1,8 @@
 ﻿@page "/textCompletion"
-
-<PageTitle>Text Completion Example</PageTitle>
-
-@using Azure.CognitiveService.Client
-@using Azure.CognitiveService.Client.BlazorApp.Models;
-@using Azure.CognitiveServices.Client.OpenAI.Models.Responses.Common;
-@using Azure.CognitiveServices.Client.OpenAI.ExtensionMethods;
-@using Microsoft.Extensions.Options;
-@using Azure.CognitiveServices.Client.OpenAI.Models;
 @inject ITextCompletionService TextCompletionSerice
 @inject IOptionsSnapshot<AzureOpenAIConfig> OpenAIConfig;
 
+<PageTitle>Text Completion Example</PageTitle>
 <div class="px-4">
 <h1>Text Completion Streaming Example</h1>
 
