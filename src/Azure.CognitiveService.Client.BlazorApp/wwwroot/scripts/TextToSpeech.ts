@@ -3,7 +3,12 @@ class TextToSpeech {
     speak(text: string, voiceUri: string = "") {
         return new Promise<void>((resolve) => {
             let voices = speechSynthesis.getVoices();
-            let voice = voiceUri === "" ? voices.filter(i => i.default)[0] : voices.filter(i => i.voiceURI === voiceUri)[0];
+            let voice;
+            if (voiceUri === "" && voices.filter(i => i.lang == "en-GB").length > 0) {
+                voice = voices.filter(i => i.lang == "en-GB")[0];
+            } else {
+                voice = voiceUri === "" ? voices.filter(i => i.default)[0] : voices.filter(i => i.voiceURI === voiceUri)[0];
+            }
 
             let utterance = new SpeechSynthesisUtterance();
             utterance.text = text;
