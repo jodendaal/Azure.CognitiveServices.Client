@@ -1,5 +1,6 @@
 @page "/chat"
 @using Azure.CognitiveService.Client.BlazorApp.Pages.Chat.Components
+@using static Azure.CognitiveService.Client.BlazorApp.Interop.TextToSpeech;
 @inject IChatCompletionService ChatCompletionSerice
 @inject IOptionsSnapshot<AzureOpenAIConfig> OpenAIConfig;
 @inject IJSRuntime JSRuntime
@@ -37,12 +38,20 @@
                 Text="@VoiceRecordingPartial" 
                 OnStopRecordingClicked="OnStopRecordingClicked" />
             
+                <TextToSpeechDisplay
+                    IsSpeaking="@IsSpeaking"
+                    OnStopClicked="OnStopSpeakingClicked">
+                </TextToSpeechDisplay>
 
             <ChatInput SearchModel="@SelectedSearchModel"
                 OnGenerateTextCompletionSubmitted="@OnTextCompletionSubmitted"
+                OnToggleTextToSpeechEnabledClicked="@OnTextToSpeechToggleClicked"
+                OSelectVoiceClicked="@OnSelectVoiceClicked"
                 IsBusy="@IsBusy"
                 IsRecording="@IsRecording"
-                OnRecordClicked="OnRecordClicked" />
+                IsTextToSpeechEnabled="@IsTextToSpeechEnabled"
+                OnRecordClicked="OnRecordClicked"
+               />
             
         </div>
     </div>
@@ -59,9 +68,16 @@
     ChatRequest="CreateRequest()">
 </CodeExampleModal>
 
+<VoiceSelectionModal @ref="VoiceSelectionModal"
+    OnVoiceSelected="OnVoiceSelected">
+</VoiceSelectionModal>
+
 
 @code {
     CodeExampleModal? ViewCodeModalRef;
+    VoiceSelectionModal? VoiceSelectionModal;
+    private bool IsTextToSpeechEnabled { get; set; } = true;
+    private bool IsSpeaking { get; set; }
     private bool IsRecording = false;
     private string VoiceRecordingPartial = string.Empty;
     private AzureOpenAIConfig config => OpenAIConfig.Get("chat");
@@ -74,6 +90,10 @@
     private ChatSearchModel SelectedSearchModel { get; set; } = new ChatSearchModel();
     private List<ChatSearchModel> SearchModelExamples = new List<ChatSearchModel>();
     private SpeechToText SpeechToTextHelper;
+    private TextToSpeech TextToSpeechHelper;
+    private List<Voice> Voices = new List<Voice>();
+    private string SelectedVoiceUri = "";
+    private CancellationTokenSource? _textToSpeechCancellationTokenSource;
 
     protected override async Task OnInitializedAsync()
     {
@@ -88,12 +108,15 @@
         if (firstRender)
         {
             await this.InitialiseVoiceToText();
+            await this.InitialiseTextToSpeech();
         }
         await base.OnAfterRenderAsync(firstRender);
     }
 
     private async Task SendChatCompletionRequest()
     {
+
+
         this.setIsProcessing(true);
 
         this.ConversationHistory.Add(new ChatInfo() { User = "User", Message = this.SelectedSearchModel.SearchText });
@@ -108,6 +131,8 @@
                 this.ConversationHistory[ConversationHistory.Count - 1].Message += result.Value!.Choices[0].Delta.Content;
                 this.StateHasChanged();
             }
+
+            this.Speak(this.ConversationHistory[ConversationHistory.Count - 1].Message);
         }
         catch (Exception ex)
         {
@@ -191,7 +216,7 @@
         this.SearchModelExamples = JsonSerializer.Deserialize<List<ChatSearchModel>>(json) ?? new List<ChatSearchModel>();
     }
 
-     void OnExampleChanged(string name)
+    void OnExampleChanged(string name)
     {
         LoadExamples();
         this.ConversationHistory.Clear();
@@ -253,6 +278,44 @@
         StateHasChanged();
     }
 
+    private void OnSelectVoiceClicked()
+    {
+        VoiceSelectionModal?.ShowAsync();
+    }
+
+    private void OnVoiceSelected(Voice voice)
+    {
+        this.SelectedVoiceUri = voice.VoiceURI;
+    }
+
+    private void OnTextToSpeechToggleClicked()
+    {
+        IsTextToSpeechEnabled = !IsTextToSpeechEnabled;
+    }
+
+    private async void OnStopSpeakingClicked()
+    {
+        if (this.IsTextToSpeechEnabled)
+        {
+            await TextToSpeechHelper.Cancel();
+            this.IsSpeaking = false;
+            _textToSpeechCancellationTokenSource?.Cancel();
+            StateHasChanged();
+        }
+    }
+   
+    private async void Speak(string text)
+    {
+        if (this.IsTextToSpeechEnabled)
+        {
+            _textToSpeechCancellationTokenSource = new CancellationTokenSource();
+            this.IsSpeaking = true;
+            await TextToSpeechHelper.Speak(text,this.SelectedVoiceUri, _textToSpeechCancellationTokenSource.Token);
+            this.IsSpeaking = false;
+            StateHasChanged();
+        }
+    }
+
     private async Task InitialiseVoiceToText()
     {
         if (this.SpeechToTextHelper == null)
@@ -260,5 +323,17 @@
             this.SpeechToTextHelper = new SpeechToText(JSRuntime);
             await this.SpeechToTextHelper.Initialise();
         }
+    }
+
+    private async Task InitialiseTextToSpeech()
+    {
+        if (TextToSpeechHelper == null)
+        {
+            TextToSpeechHelper = new TextToSpeech(JSRuntime);
+            await TextToSpeechHelper.Initialise();
+        }
+
+        this.Voices = await TextToSpeechHelper.GetVoices();
+        StateHasChanged();
     }
 }
