@@ -53,3 +53,16 @@ var completionResponse = await completionService.CreateAsync("Say This is a test
 Console.WriteLine(completionResponse.Value!.ToString());
 ```
 
+Examples
+
+###Blazor
+https://github.com/jodendaal/Azure.CognitiveServices.Client/tree/main/src/Azure.CognitiveService.Client.BlazorApp
+
+###API
+https://github.com/jodendaal/Azure.CognitiveServices.Client/tree/main/src/examples/Azure.CognitiveService.API
+
+###Console
+https://github.com/jodendaal/Azure.CognitiveServices.Client/tree/main/src/examples/Azure.CognitiveService.Client.ConsoleApp
+
+##Functions App
+https://github.com/jodendaal/Azure.CognitiveServices.Client/tree/main/src/Azure.CognitiveService.Client.FunctionsApp
