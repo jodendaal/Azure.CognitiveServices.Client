@@ -70,3 +70,6 @@ https://github.com/jodendaal/Azure.CognitiveServices.Client/tree/main/src/Azure.
 ### Integration Tests
 https://github.com/jodendaal/Azure.CognitiveServices.Client/tree/main/src/Tests/Azure.CognitiveService.Client.Integration.Tests
 
+## Model References
+https://github.com/jodendaal/Azure.CognitiveServices.Client/tree/main/src/Azure.CognitiveServices.Client/Azure.CognitiveServices.Client/OpenAI/Models
+
