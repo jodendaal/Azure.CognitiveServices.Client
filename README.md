@@ -66,3 +66,7 @@ https://github.com/jodendaal/Azure.CognitiveServices.Client/tree/main/src/exampl
 
 ### Functions App
 https://github.com/jodendaal/Azure.CognitiveServices.Client/tree/main/src/Azure.CognitiveService.Client.FunctionsApp
+
+### Integration Tests
+https://github.com/jodendaal/Azure.CognitiveServices.Client/tree/main/src/Tests/Azure.CognitiveService.Client.Integration.Tests
+
